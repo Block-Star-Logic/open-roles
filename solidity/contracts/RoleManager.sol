@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: APACHE 2.0
 pragma solidity >0.7.0 <0.9.0; 
 
-
-
 import "./IRoleManager.sol";
 import "./IRoleManagerAdmin.sol";
 import "./IDelegateAdmin.sol";
@@ -52,13 +50,11 @@ contract RoleManager is IRoleManager, IRoleManagerAdmin {
     }
  
     function isAllowed(string memory _roleList) override external view returns (bool _isAllowed){
-        require(addressKnownStatusByAddressByRoleList[_roleList][msg.sender] == true, concat(concat("ia 00 address: ", addressToString(msg.sender)), concat("not allowed for role: ", _roleList)));    
-        return true; 
+        return addressKnownStatusByAddressByRoleList[_roleList][msg.sender];   
     }
 
     function isBarred(string memory _barredList) override external view returns(bool _isBarred){
-        require(!addressBarredStatusByAddressByRoleList[_barredList][msg.sender], concat(concat("ia 00 address: ", addressToString(msg.sender)), concat(" barred on list: ", _barredList)));
-        return false; 
+        return addressBarredStatusByAddressByRoleList[_barredList][msg.sender];
     }
 
     function getLists() override external returns (string[] memory _roleLists, string[] memory _barredLists){
@@ -79,6 +75,7 @@ contract RoleManager is IRoleManager, IRoleManagerAdmin {
             uint256 index = barredListAddressesByBarredList[_list].length;
             barredListAddressIndexByBarredList[_list][_address] = index; 
             
+            
             barredListsByAddress[_address].push(_list);
             index = barredListsByAddress[_address].length;
             barredListIndexByRoleListByAddress[_address][_list] = index; 
@@ -91,6 +88,8 @@ contract RoleManager is IRoleManager, IRoleManagerAdmin {
             roleListsByAddress[_address].push(_list);
             index = roleListsByAddress[_address].length;
             roleListIndexByRoleListByAddress[_address][_list] = index;
+            
+            
         }
         return true; 
     }
@@ -143,6 +142,7 @@ contract RoleManager is IRoleManager, IRoleManagerAdmin {
     function deleteList(string memory _list) override external returns (bool _deleted){
         delegateAdmin.isAdministratorOnly(msg.sender);
         require(knownListStatusByList[_list], "drl 00 - unknown list.");
+        
         if(isEqual("BARRED",knownListTypeByList[_list] )){
             require(barredListAddressesByBarredList[_list].length == 0, " dl 00 barred list not empty. ");
             uint256 index = barredListIndexByBarredList[_list];
@@ -162,6 +162,19 @@ contract RoleManager is IRoleManager, IRoleManagerAdmin {
         return true; 
     }
 
+    function getListAddresses(string memory _list) override external returns (address [] memory _addresses){
+        delegateAdmin.isAdministratorOnly(msg.sender);
+        require(knownListStatusByList[_list], "gla 00 - unknown list.");
+        
+        
+        if(isEqual("BARRED",knownListTypeByList[_list] )){
+            return barredListAddressesByBarredList[_list];     
+        }
+        else {
+            return roleListAddressesByRoleList[_list];
+        }
+        
+    }
 
     function addressToString(address _address) internal pure returns (string memory _stringAddress){
         return string(abi.encodePacked(_address));

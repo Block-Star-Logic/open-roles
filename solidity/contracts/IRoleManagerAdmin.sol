@@ -43,5 +43,10 @@ interface IRoleManagerAdmin {
      * @return _deleted 'true' if the list is successfully deleted
      */    
     function deleteList(string memory _list) external returns (bool _deleted);
+    /**
+     * @dev this will return the addresses that are on the '_list'
+     * @return _addresses attached to the list
+     */
+    function getListAddresses(string memory _list) external returns (address [] memory _addresses);
     
 }

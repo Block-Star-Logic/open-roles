@@ -11,16 +11,16 @@ pragma solidity >0.8.0 <0.9.0;
 interface IRoleManager { 
     
     /**
-     * @dev This function limits code execution of the 'msg.sender' to the addresses associated with the given '_roleList'
-     * if the 'msg.sender' is not on the list the operation will 'revert'
-     * @return _isAllowed 'true' always
+     * @dev This function returns whether 'msg.sender' is on the given 'role list'
+     * @param _roleList list of allowed addresses configured on this implementation
+     * @return _isAllowed 'true' if the role is on the list
      */
     function isAllowed(string memory _roleList) external view returns (bool _isAllowed);
 
-      /**
-     * @dev This function bars the execution of the code that follows if 'msg.sender' is on the associated _barredList
-     * if 'msg.sender' is on the list the operation will 'revert'
-     * @return _isBarred 'false' always
+    /**
+     * @dev This function returns whether 'msg.sender is on a given 'barred list'
+     * @param _barredList list of barred addresses configured on this implementation
+     * @return _isBarred 'true'  if msg.sender is on the barred list
      */
     function isBarred(string memory _barredList) external view returns(bool _isBarred);
 }
