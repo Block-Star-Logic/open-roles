@@ -1,0 +1,1 @@
+initSidebarItems({"derive":[["BorshDeserialize",""],["BorshSchema",""],["BorshSerialize",""]]});

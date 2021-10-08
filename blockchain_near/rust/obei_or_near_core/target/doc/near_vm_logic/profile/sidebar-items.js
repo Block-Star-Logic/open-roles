@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["FixedArray",""],["ProfileData","Profile of gas consumption."]],"type":[["InternalProfileData","Data for total gas burnt (index 0), and then each action and external cost"]]});

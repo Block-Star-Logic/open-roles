@@ -1,0 +1,1 @@
+C:\work\in_repo\open-roles\blockchain_near\rust\obei_or_near_core\target\debug\libobei_or_near_core.rlib: C:\work\in_repo\open-roles\blockchain_near\rust\obei_or_near_core\src\lib.rs C:\work\in_repo\open-roles\blockchain_near\rust\obei_or_near_core\src\or_structs\mod.rs C:\work\in_repo\open-roles\blockchain_near\rust\obei_or_near_core\src\tests\mod.rs

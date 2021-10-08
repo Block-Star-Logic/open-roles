@@ -404,7 +404,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "obei_or_near"
+name = "obei_or_near_core"
 version = "0.1.0"
 dependencies = [
  "near-sdk",

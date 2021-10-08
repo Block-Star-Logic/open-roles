@@ -1,5 +1,5 @@
 [package]
-name = "obei_or_near"
+name = "obei_or_near_core"
 version = "0.1.0"
 authors = ["Block Star Logic"]
 edition = "2018"

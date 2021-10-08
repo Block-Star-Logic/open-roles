@@ -1,0 +1,10 @@
+C:\work\in_repo\open-roles\blockchain_near\rust\obei_or_near_core\target\debug\deps\proc_macro2-8cb2ec1912154721.rmeta: C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\lib.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\marker.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\parse.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\detection.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\fallback.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\wrapper.rs
+
+C:\work\in_repo\open-roles\blockchain_near\rust\obei_or_near_core\target\debug\deps\proc_macro2-8cb2ec1912154721.d: C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\lib.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\marker.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\parse.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\detection.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\fallback.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\wrapper.rs
+
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\lib.rs:
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\marker.rs:
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\parse.rs:
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\detection.rs:
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\fallback.rs:
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\proc-macro2-1.0.29\src\wrapper.rs:

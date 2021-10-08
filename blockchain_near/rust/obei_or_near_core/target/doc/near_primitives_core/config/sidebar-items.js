@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["ActionCosts",""],["ExtCosts","Strongly-typed representation of the fees for counting."]],"struct":[["ExtCostsConfig",""],["VMConfig",""],["VMLimitConfig","Describes limits for VM and Runtime."]]});

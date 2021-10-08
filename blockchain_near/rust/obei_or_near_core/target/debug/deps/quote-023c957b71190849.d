@@ -1,0 +1,11 @@
+C:\work\in_repo\open-roles\blockchain_near\rust\obei_or_near_core\target\debug\deps\quote-023c957b71190849.rmeta: C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\lib.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\ext.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\format.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\ident_fragment.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\to_tokens.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\runtime.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\spanned.rs
+
+C:\work\in_repo\open-roles\blockchain_near\rust\obei_or_near_core\target\debug\deps\quote-023c957b71190849.d: C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\lib.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\ext.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\format.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\ident_fragment.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\to_tokens.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\runtime.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\spanned.rs
+
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\lib.rs:
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\ext.rs:
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\format.rs:
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\ident_fragment.rs:
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\to_tokens.rs:
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\runtime.rs:
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\quote-1.0.9\src\spanned.rs:

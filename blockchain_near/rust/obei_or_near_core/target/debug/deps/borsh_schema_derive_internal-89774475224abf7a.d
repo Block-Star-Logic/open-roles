@@ -1,0 +1,8 @@
+C:\work\in_repo\open-roles\blockchain_near\rust\obei_or_near_core\target\debug\deps\borsh_schema_derive_internal-89774475224abf7a.rmeta: C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\borsh-schema-derive-internal-0.8.2\src\lib.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\borsh-schema-derive-internal-0.8.2\src\helpers.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\borsh-schema-derive-internal-0.8.2\src\enum_schema.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\borsh-schema-derive-internal-0.8.2\src\struct_schema.rs
+
+C:\work\in_repo\open-roles\blockchain_near\rust\obei_or_near_core\target\debug\deps\borsh_schema_derive_internal-89774475224abf7a.d: C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\borsh-schema-derive-internal-0.8.2\src\lib.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\borsh-schema-derive-internal-0.8.2\src\helpers.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\borsh-schema-derive-internal-0.8.2\src\enum_schema.rs C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\borsh-schema-derive-internal-0.8.2\src\struct_schema.rs
+
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\borsh-schema-derive-internal-0.8.2\src\lib.rs:
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\borsh-schema-derive-internal-0.8.2\src\helpers.rs:
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\borsh-schema-derive-internal-0.8.2\src\enum_schema.rs:
+C:\Users\Kunz\ Academy\.cargo\registry\src\github.com-1ecc6299db9ec823\borsh-schema-derive-internal-0.8.2\src\struct_schema.rs:
