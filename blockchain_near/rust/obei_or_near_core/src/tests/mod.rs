@@ -1,14 +1,8 @@
 
-use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, near_bindgen,};
-use near_sdk::collections::{UnorderedSet, LookupMap, Vector,};
-use core::panic;
-use std::collections::{HashMap, HashSet,};
-use std::convert::TryFrom;
+use near_sdk::{env,};
 
 #[cfg(test)]
 
-use super::*;
 use near_sdk::MockedBlockchain;
 use near_sdk::{testing_env, VMContext};
 
@@ -37,7 +31,6 @@ fn get_context(input: Vec<u8>, is_view: bool) -> VMContext {
 }
 
 fn get_default_or()-> super::OpenRoles {
-    let context = get_context(vec![], false);
     let mut or = super::OpenRoles::new();
 
     or.create_list("test_allow_list".to_string(), "ALLOW".to_string());
@@ -86,7 +79,7 @@ fn test_is_barred(){
     let context = get_context(vec![], false);
     testing_env!(context);
     
-    let mut or_governor = get_default_or();
+    let or_governor = get_default_or();
     assert_eq!(true, or_governor.is_barred("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_red".to_string(), "test_user_account_gamma.testnet".to_string()));
 
     assert_eq!(false, or_governor.is_barred("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_red".to_string(), "test_user_account_beta.testnet".to_string()))
@@ -98,7 +91,7 @@ fn test_view_list_names(){
     let context = get_context(vec![], false);
     testing_env!(context);
     
-    let mut or_governor = get_default_or();
+    let or_governor = get_default_or();
 
     let list_names = or_governor.view_list_names();
    
@@ -113,7 +106,7 @@ fn test_view_list() {
     
     let or_governor = get_default_or();
 
-    let (name, list_type, ids, status) = or_governor.view_list("test_allow_list".to_string());
+    let (_name, list_type, ids, status) = or_governor.view_list("test_allow_list".to_string());
     assert_eq!("ALLOW", list_type);
     assert!(ids.contains(&"test_user_account_alpha.testnet".to_string()));
     assert!(ids.contains(&"test_user_account_beta.testnet".to_string()));
@@ -177,7 +170,7 @@ fn test_view_list_assignments() {
     let context = get_context(vec![], false);
     testing_env!(context);
     
-    let mut or_governor = get_default_or();
+    let or_governor = get_default_or();
     let assignments = or_governor.view_list_assignments("test_allow_list".to_string());    
     assert_eq!(1, assignments.len());
 }
