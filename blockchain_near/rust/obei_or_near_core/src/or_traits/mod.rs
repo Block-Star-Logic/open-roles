@@ -27,6 +27,9 @@ pub trait TOpenRoles {
 #[ext_contract(ext_open_roles_admin)]
 pub trait TOpenRolesAdmin { 
 
+    // Returns the version number of the implementation
+    fn get_version(&self) -> PromiseOrValue<Vec<String>>;
+
     /// Provides a list of list_names currently held by this instance. This will include names of **DELETED** lists 
     fn view_list_names(&self) -> PromiseOrValue<Vec<String>>;
     

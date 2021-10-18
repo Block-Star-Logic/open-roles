@@ -26,28 +26,27 @@
 mod tests;
 mod or_structs;
 
-use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, near_bindgen,};
-use near_sdk::collections::{UnorderedSet, LookupMap, };
+use std::collections::{HashMap, HashSet};
 
+use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
+use near_sdk::{env, near_bindgen};
 use or_structs::{AssignmentAddress, DependentContract, ParticipantList};
 
 near_sdk::setup_alloc!();
 
-
 #[near_bindgen]
-#[derive(BorshDeserialize, BorshSerialize)]
+#[derive( serde::Serialize, BorshDeserialize, BorshSerialize, Default)]
 struct OpenRoles{
 	
 	role_administrator : String, //administers all the accounts 
 	
-	contract_by_contract_name_by_contract_account_id : LookupMap<String, LookupMap<String, or_structs::DependentContract>>, // main data store
+	contract_by_contract_name_by_contract_account_id : HashMap<String, HashMap<String, or_structs::DependentContract>>, // main data store
 	
-	lists :LookupMap<String, or_structs::ParticipantList>, // participant lists 
+	lists :HashMap<String, or_structs::ParticipantList>, // participant lists 
 	
-	operation_assignment_address_by_list : LookupMap<String, UnorderedSet<or_structs::AssignmentAddress>>, // view of list operation assignments 
+	operation_assignment_address_by_list : HashMap<String, HashSet<or_structs::AssignmentAddress>>, // view of list operation assignments 
 
-	list_names : UnorderedSet<String>, // participant list names 
+	list_names : HashSet<String>, // participant list names 
 
 }
 
@@ -68,16 +67,21 @@ impl OpenRoles{
 	/// This function returns: 
 	///  **'bool'** : **true** if and only if the user is listed as allowed to access the operation 	
 	pub fn is_allowed(&self, contract_account_id : String, contract_name : String, operation : String, user_account_id : String) -> bool {
-		let  list_name = self.contract_by_contract_name_by_contract_account_id.get(&contract_account_id).unwrap().get(&contract_name).unwrap().list_name_by_operation.get(&operation).unwrap();
-		let plist = self.lists.get(&list_name).unwrap();
-	
-		println!(" user id allow {} ", user_account_id);
-		if plist.status.as_bytes() != "DELETED".to_string().as_bytes() {
-			let a_result = plist.account_ids.contains(&user_account_id);
-			println!(" a result  {} list {} user {} ", a_result, plist.account_ids.len(), &user_account_id);
-			return a_result
+		if self.is_registered(contract_account_id.clone(), contract_name.clone()){
+			let  list_name = self.contract_by_contract_name_by_contract_account_id.get(&contract_account_id).unwrap().get(&contract_name).unwrap().list_name_by_operation.get(&operation).unwrap();
+			let plist = self.lists.get(list_name).unwrap();
+		
+			println!(" user id allow {} ", user_account_id);
+			if plist.status.as_bytes() != "DELETED".to_string().as_bytes() {
+				let a_result = plist.account_ids.contains(&user_account_id);
+				println!(" a result  {} list {} user {} ", a_result, plist.account_ids.len(), &user_account_id);
+				return a_result
+			}
+			false
 		}
-		false
+		else {
+			panic!(" contract : {} not registered for account {} ", contract_account_id, contract_name)
+		}
 	}
 
 	/// Checks whether the given on chain **'user_account_id'**  is barred from access the stated operation (function)
@@ -86,17 +90,22 @@ impl OpenRoles{
 	/// This function returns: 
 	///  **'bool'** : **true** if and only if the user is listed as barred to access the operation 
 	pub fn is_barred(&self, contract_account_id : String, contract_name :String, operation : String, user_account_id : String) -> bool {
-		let  list_name = self.contract_by_contract_name_by_contract_account_id.get(&contract_account_id).unwrap().get(&contract_name).unwrap().list_name_by_operation.get(&operation).unwrap();		
-		let plist = self.lists.get(&list_name).unwrap();
+		if self.is_registered(contract_account_id.clone(), contract_name.clone()){
+			let  list_name = self.contract_by_contract_name_by_contract_account_id.get(&contract_account_id).unwrap().get(&contract_name).unwrap().list_name_by_operation.get(&operation).unwrap();		
+			let plist = self.lists.get(list_name).unwrap();
 
-		println!(" user id barred {} ", user_account_id);
-		if plist.status.as_bytes() != "DELETED".to_string().as_bytes() {
-			let b_result = plist.account_ids.contains(&user_account_id); 
-			println!(" b result  {} list {} user {} ", b_result, plist.account_ids.len(), &user_account_id);
-			
-			return b_result
+			println!(" user id barred {} ", user_account_id);
+			if plist.status.as_bytes() != "DELETED".to_string().as_bytes() {
+				let b_result = plist.account_ids.contains(&user_account_id); 
+				println!(" b result  {} list {} user {} ", b_result, plist.account_ids.len(), &user_account_id);
+				
+				return b_result
+			}
+			false
 		}
-		false
+		else {
+			panic!(" contract : {} not registered for account {} ", contract_account_id, contract_name)
+		}
 	}
 	
 	/// Checks whether the given **DependentContract** is registered under the given **concract_account_id** 
@@ -108,8 +117,8 @@ impl OpenRoles{
 		self.contract_by_contract_name_by_contract_account_id.get(&contract_account_id).unwrap().contains_key(&contract_name)
 	}
 	
-	pub fn view_list_assignments(&self, list_name : String) -> Vec<AssignmentAddress> {
-		self.operation_assignment_address_by_list.get(&list_name).unwrap().to_vec()
+	pub fn view_list_assignments(&self, list_name : String) -> &HashSet<AssignmentAddress> {
+		self.operation_assignment_address_by_list.get(&list_name).unwrap()
 	}
 
 	/// Assigns the given **list** to the given operation on the given contract deployed at the given NEAR account id
@@ -125,7 +134,7 @@ impl OpenRoles{
 								operation : operation.clone(),
 							};
 
-		let mut contract = self.contract_by_contract_name_by_contract_account_id.get(&contract_account_id).unwrap().get(&contract_name).unwrap();
+		let contract = self.contract_by_contract_name_by_contract_account_id.get_mut(&contract_account_id).unwrap().get_mut(&contract_name).unwrap();
 				
 		contract.assign_list_name_to_operation(operation.clone(), list_name.clone());
 		
@@ -133,9 +142,9 @@ impl OpenRoles{
 
 		}
 		else {
-			let mut ops = UnorderedSet::<AssignmentAddress>::new(b's'); 
-			ops.insert(&assignment_address);			
-			self.operation_assignment_address_by_list.insert(&list_name, &ops);
+			let mut ops = HashSet::<AssignmentAddress>::new(); 
+			ops.insert(assignment_address);			
+			self.operation_assignment_address_by_list.insert(list_name, ops);
 		}
 
 		"LIST ASSIGNED".to_string()
@@ -154,11 +163,11 @@ impl OpenRoles{
 			operation : operation.clone(),
 		};
 
-		let mut contract = self.contract_by_contract_name_by_contract_account_id.get(&contract_account_id).unwrap().get(&contract_name).unwrap();
+		let contract = self.contract_by_contract_name_by_contract_account_id.get_mut(&contract_account_id).unwrap().get_mut(&contract_name).unwrap();
 		
 		let list_name = contract.de_assign_list_name_from_operation(operation);
 		
-		self.operation_assignment_address_by_list.get(&list_name).unwrap().remove(&assignment_address);
+		self.operation_assignment_address_by_list.get_mut(&list_name).unwrap().remove(&assignment_address);
 
 		"LIST REMOVED".to_string()						
 	}
@@ -173,11 +182,11 @@ impl OpenRoles{
 		let list = ParticipantList {
 							name : list_name.clone(), 
 							list_type, 
-							account_ids : UnorderedSet::new(b'a'),
+							account_ids : HashSet::<String>::new(),
 							status : "ACTIVE".to_string(),
 						};
-		self.lists.insert(&list_name.clone(), &list);
-		self.list_names.insert(&list_name);
+		self.lists.insert(list_name.clone(), list);
+		self.list_names.insert(list_name);
 		"LIST CREATED".to_string()
 	}
 
@@ -188,7 +197,7 @@ impl OpenRoles{
 	pub fn delete_list(&mut self, list_name : String) -> String {
 		self.administrator_only ();
 		
-		let mut plist = self.lists.get(&list_name).unwrap(); 
+		let plist = self.lists.get_mut(&list_name).unwrap(); 
 		plist.status = "DELETED".to_string();
 
 		&mut self.list_names.remove(&plist.name);
@@ -202,11 +211,11 @@ impl OpenRoles{
 	/// This function returns *String* otherwise panics  
 	pub fn add_account_id_to_list(&mut self, user_account_id : String, list_name : String) -> String {
 		self.administrator_only ();
-		let mut plist = self.lists.get(&list_name).unwrap();
+		let plist = self.lists.get_mut(&list_name).unwrap();
 		
 		OpenRoles::check_status( plist.status.to_string(), "ACTIVE".to_string());
 		
-		plist.account_ids.insert(&user_account_id);
+		plist.account_ids.insert(user_account_id);
 		
 		"ACCOUNT ADDED".to_string()
 	}    
@@ -217,7 +226,7 @@ impl OpenRoles{
 	/// This function returns *String* otherwise panics  	
 	pub fn remove_account_from_list(&mut self, user_account_id : String, list_name : String) -> String {
 		self.administrator_only ();
-		let mut plist = self.lists.get(&list_name).unwrap(); 
+		let plist = self.lists.get_mut(&list_name).unwrap(); 
 
 		OpenRoles::check_status( plist.status.to_string(), "ACTIVE".to_string());
 
@@ -232,39 +241,39 @@ impl OpenRoles{
 	/// This function returns *String* otherwise panics  
 	pub fn register_contract(&mut self, contract_account_id : String, contract_name : String, ops : Vec<String>) -> String {
 		self.administrator_only ();
-		let mut u_ops = UnorderedSet::<String>::new(b'w');
+		let mut u_ops = HashSet::<String>::new();
 		for o in ops { 
-			u_ops.insert(&o);
+			u_ops.insert(o);
 		}
 		let contract = DependentContract{
 								name : contract_name, 
 								account_id : contract_account_id, 
 								operations : u_ops, 
-								list_name_by_operation : LookupMap::<String, String>::new(b'l'),
+								list_name_by_operation : HashMap::<String, String>::new(),
 							 };
 		let msg = format!("CONTRACT {} REGISTERED", &contract.view_name());
 		
 		if self.contract_by_contract_name_by_contract_account_id.contains_key(&contract.view_account_id()) {
 			
-			let mut contracts  = self.contract_by_contract_name_by_contract_account_id.get(&contract.view_account_id()).unwrap();
+			let contracts  = self.contract_by_contract_name_by_contract_account_id.get_mut(&contract.view_account_id()).unwrap();
 			
 			if contracts.contains_key(&contract.view_name()) {
 				panic!("Contract {} already registered. De-register and re-register to change.", &contract.view_name())
 			}
 			else {
 				let c_name = contract.view_name().clone(); 
-				contracts.insert(&c_name, &contract);
+				contracts.insert(c_name, contract);
 			}			
 		}
 		else {
 			
-			let mut cs = LookupMap::<String, DependentContract>::new(b'd');
+			let mut cs = HashMap::<String, DependentContract>::new();
 			
 			let c_n = contract.view_name();
 			let c_a_id = contract.view_account_id();
 			
-			cs.insert(&c_n, &contract);
-			self.contract_by_contract_name_by_contract_account_id.insert(&c_a_id, &cs);
+			cs.insert(c_n, contract);
+			self.contract_by_contract_name_by_contract_account_id.insert(c_a_id, cs);
 		}
 		msg
 	}	
@@ -275,7 +284,7 @@ impl OpenRoles{
 	/// This function returns *String* otherwise panics  
 	pub fn deregister_contract(&mut self, contract_account_id : String, contract_name : String) -> String {
 		self.administrator_only ();
-		let mut contracts = self.contract_by_contract_name_by_contract_account_id.get(&contract_account_id).unwrap();
+		let contracts = self.contract_by_contract_name_by_contract_account_id.get_mut(&contract_account_id).unwrap();
 		contracts.remove(&contract_name); 
 		let msg = format!("CONTRACT {} DE-REGISTERED", contract_name);
 		msg
@@ -285,9 +294,9 @@ impl OpenRoles{
 	/// <br/> Administrator Only function
 	/// # Return Value 
 	/// This function returns *String* otherwise panics  
-	pub fn view_list_names(&self) -> Vec<String>{
+	pub fn view_list_names(&self) -> HashSet<String>{
 		self.administrator_only();
-		self.list_names.to_vec()
+		self.list_names.clone()
 	}
 
 		
@@ -295,7 +304,7 @@ impl OpenRoles{
 	/// <br/> Administrator Only function
 	/// # Return Value 
 	/// This function returns a tuple otherwise panics 
-	pub fn view_list(&self, list_name : String) -> (/*name*/ String,  /*type*/ String, /*ids*/ Vec<String>, /*status*/ String) { 
+	pub fn view_list(&self, list_name : String) -> (/*name*/ String,  /*type*/ String, /*ids*/ HashSet<String>, /*status*/ String) { 
 		self.administrator_only();
 		let plist = self.lists.get(&list_name).unwrap();
 		plist.get_tuple()
@@ -316,30 +325,31 @@ impl OpenRoles{
 	/// # Return Value 
 	/// This function returns a *String* otherwise panics
 	pub fn set_role_administrator(&mut self, account_id : String) -> bool { 
-		self.administrator_only();
-		self.role_administrator = account_id; 
-		true
+		if self.role_administrator.clone().as_bytes() == "".as_bytes() { // if unset
+			self.role_administrator = account_id;
+			true
+		}
+		else {
+			self.administrator_only();
+			self.role_administrator = account_id; 
+			true
+		}
 	}	
 	
 	/// Creates a default instance of the OpenRoles contract with the administrator set to the calling NEAR account_id
 	pub fn new() -> Self {
 		Self {
 			role_administrator : env::current_account_id().to_string(),
-			contract_by_contract_name_by_contract_account_id : LookupMap::<String, LookupMap<String, DependentContract>>::new(b'x'),
-			lists : LookupMap::<String, or_structs::ParticipantList>::new(b'n'),
-			list_names : UnorderedSet::<String>::new(b'y'),
-			operation_assignment_address_by_list : LookupMap::<String, UnorderedSet<AssignmentAddress>>::new(b'r'),
+			contract_by_contract_name_by_contract_account_id : HashMap::<String, HashMap<String, DependentContract>>::new(),
+			lists : HashMap::<String, or_structs::ParticipantList>::new(),
+			list_names : HashSet::<String>::new(),
+			operation_assignment_address_by_list : HashMap::<String, HashSet<AssignmentAddress>>::new(),
 		}
 	}	
 
+	/// Creates a new instace of the OpenRoles contract 
 	pub fn default() -> Self {
-		Self {
-			role_administrator : env::current_account_id().to_string(),
-			contract_by_contract_name_by_contract_account_id : LookupMap::<String, LookupMap<String, DependentContract>>::new(b'x'),
-			lists : LookupMap::<String, or_structs::ParticipantList>::new(b'n'),
-			list_names : UnorderedSet::<String>::new(b'y'),
-			operation_assignment_address_by_list : LookupMap::<String, UnorderedSet<AssignmentAddress>>::new(b'r'),
-		}
+		OpenRoles::new()
 	}
 
 	fn check_status( base : String, required : String) {
