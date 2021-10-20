@@ -1,3 +1,3 @@
-# Open Roles on NEAR 
+# Open Roles on NEAR - Builders Guide
 
-This provides support the Open Roles on the NEAR blockchain
+This guide has been prepared for Builders on the NEAR blockchain 
