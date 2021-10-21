@@ -1,4 +1,5 @@
 blockchain_near/rust/obei_or_near_core/target/
+blockchain_near/rust/obei_or_near_core/target_/
 blockchain_near/rust/obei_or_near_smoker/
 blockchain_near/rust/obei_or_near_core/target/.rustc_info.json
 blockchain_near/rust/obei_or_near_core/target/CACHEDIR.TAG
@@ -1838,3 +1839,10 @@ blockchain_near/rust/obei_or_near_core/target/debug/deps/obei_or_near_core.dll
 *.ll
 *.pdb
 *.exp
+blockchain_near/rust/obei_or_near_core/Cargo.lock
+blockchain_near/rust/obei_or_near_core/correct test results
+blockchain_near/rust/obei_or_near_core/Cargo.lock
+blockchain_near/rust/obei_or_near_core/target/debug/.fingerprint/obei_or_near_core-1f761d8c13ad7efa/output-test-lib-obei_or_near_core
+blockchain_near/rust/obei_or_near_core/target/debug/.fingerprint/obei_or_near_core-1f761d8c13ad7efa/test-lib-obei_or_near_core
+blockchain_near/rust/obei_or_near_core/target/debug/.fingerprint/obei_or_near_core-4a37afe51add3708/lib-obei_or_near_core
+blockchain_near/rust/obei_or_near_core/target/debug/.fingerprint/obei_or_near_core-4a37afe51add3708/lib-obei_or_near_core.json
