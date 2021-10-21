@@ -1,4 +1,0 @@
-(function() {var implementors = {};
-implementors["near_sdk_core"] = [{"text":"impl <a class=\"trait\" href=\"syn/parse/trait.Parse.html\" title=\"trait syn::parse::Parse\">Parse</a> for <a class=\"struct\" href=\"near_sdk_core/struct.SerializerAttr.html\" title=\"struct near_sdk_core::SerializerAttr\">SerializerAttr</a>","synthetic":false,"types":["near_sdk_core::info_extractor::serializer_attr::SerializerAttr"]},{"text":"impl <a class=\"trait\" href=\"syn/parse/trait.Parse.html\" title=\"trait syn::parse::Parse\">Parse</a> for <a class=\"struct\" href=\"near_sdk_core/struct.InitAttr.html\" title=\"struct near_sdk_core::InitAttr\">InitAttr</a>","synthetic":false,"types":["near_sdk_core::info_extractor::init_attr::InitAttr"]}];
-implementors["syn"] = [];
-if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

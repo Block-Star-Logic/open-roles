@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["hash","Calculates a hash of a bytes slice."]],"struct":[["CryptoHash",""],["Digest",""]]});

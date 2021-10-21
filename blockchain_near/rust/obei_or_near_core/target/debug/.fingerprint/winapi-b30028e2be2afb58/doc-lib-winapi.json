@@ -1,1 +1,0 @@
-{"rustc":8364343145765662553,"features":"[\"memoryapi\", \"synchapi\", \"winbase\"]","target":7233469571210626501,"profile":10909509630631437178,"path":15002694316502059107,"deps":[[11200738327577307306,"build_script_build",false,10363288522323951045]],"local":[{"Precalculated":"0.3.9"}],"rustflags":[],"metadata":16266002775178098827,"config":0,"compile_kind":0}

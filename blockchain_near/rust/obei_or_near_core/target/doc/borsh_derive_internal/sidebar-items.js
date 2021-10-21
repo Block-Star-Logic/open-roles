@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["enum_de",""],["enum_ser",""],["struct_de",""],["struct_ser",""],["union_de",""],["union_ser",""]]});

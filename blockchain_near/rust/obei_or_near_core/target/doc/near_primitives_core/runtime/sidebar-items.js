@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["fees","Describes the various costs incurred by creating receipts. We use the following abbreviation for readability:"]]});
