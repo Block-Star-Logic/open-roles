@@ -11,7 +11,7 @@ By implementing Open Roles you can delegate authority profiles to different memb
 
 Open Roles also enables you to preserve and/or upgrade your dApp governance scheme between dApp migrations without the need for massive code level overhauls of your governance. 
 ## How it works 
-<<diagram>>
+![Open Roles - High level decentralized business overview](https://github.com/Block-Star-Logic/open-roles/blob/63616afef829799f56cbcdfbec38f84c6ba8d168/media/design/Open%20Roles%20-%20High%20Level-Business%20View.png)
 
 
 ## How to implement?
@@ -24,21 +24,25 @@ This project is licensed under Apache 2.0 hence can be freely extended to includ
 
 Open Roles is currently supported on the following blockchains:
 
-**Ethereum** 
+<img src="https://github.com/Block-Star-Logic/open-roles/blob/63616afef829799f56cbcdfbec38f84c6ba8d168/media/logos/ethereum-logo-portrait-purple.png" width="50" height="40" alt="Ethereum Logo"/>[**Ethereum**](https://github.com/Block-Star-Logic/open-roles/tree/main/blockchain_ethereum)
 
-**NEAR (31 October 2021)** 
+<img src="https://github.com/Block-Star-Logic/open-roles/blob/63616afef829799f56cbcdfbec38f84c6ba8d168/media/logos/near_logo_stack.png" width="40" height="50" alt="NEAR Logo"/>[**NEAR (31 October 2021)**](https://github.com/Block-Star-Logic/open-roles/tree/main/blockchain_near)
 
 For any support queries join our discord 
 https://discord.gg/mbPsj4qGRu 
 
 For Business User Documentation see: 
-<link>
+* [Open Roles Business Guide](https://github.com/Block-Star-Logic/open-roles/tree/main/business)
 
 For Role Administrator Documentation see:
-<link>
+* [Open Roles on Ethereum - Administrators Guide](https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_ethereum/ADMIN.md)
 
-For Developer Documentation 
-<link>
+* [Open Roles on NEAR - Administrators Guide](https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_near/ADMIN.md)
+
+For Developer Documentation see:
+* [Open Roles on Ethereum - Builders Guide](https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_ethereum/BUILDER.md)
+
+* [Open Roles on NEAR - Builders Guide](https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_near/BUILDER.md)
 
 
 
