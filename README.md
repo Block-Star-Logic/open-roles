@@ -20,7 +20,12 @@ The way to implement Open Roles in your decentralized business is as follow:
 
 Business users (e.g. operations teams, customer service teams)  determine what accesses and privileges they require for their roles and business processes. This creates a role profile that is then implemented by the technical Role Administrator (e.g. DevOps team, IT Team). The controls are then tested to ensure that they meet the business operating needs and away you go.  
 
+
+## Licensing 
+
 This project is licensed under Apache 2.0 hence can be freely extended to include any customisations you require. 
+
+## Blockchain Support
 
 Open Roles is currently supported on the following blockchains:
 
@@ -28,8 +33,12 @@ Open Roles is currently supported on the following blockchains:
 
 <img src="https://github.com/Block-Star-Logic/open-roles/blob/63616afef829799f56cbcdfbec38f84c6ba8d168/media/logos/near_logo_stack.png" width="40" height="50" alt="NEAR Logo"/>[**NEAR (31 October 2021)**](https://github.com/Block-Star-Logic/open-roles/tree/main/blockchain_near)
 
+## Community
+
 For any support queries join our discord 
 https://discord.gg/mbPsj4qGRu 
+
+## Documentation
 
 For Business User Documentation see: 
 * [Open Roles Business Guide](https://github.com/Block-Star-Logic/open-roles/tree/main/business)
