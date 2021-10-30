@@ -33,3 +33,5 @@ To access your Open Roles deployment from your dApp in an administrator facing c
 2. Deploy your Open Roles instance - to deploy Open Roles follow the instructions in the <a href="ADMIN.md">Administrators Guide</a>. 
 3. Configure your Role Matrix 
 
+
+**for further support join our <a href="https://rebrand.ly/obei_or_git">Discord</a> on the #dev-support channel**
