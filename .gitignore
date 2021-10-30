@@ -1,5 +1,6 @@
 blockchain_near/rust/open-block-ei-open-roles-near-core/Cargo.lock
 blockchain_near/rust/open-block-ei-open-roles-near-core/target/
+blockchain_near/rust/open-block-ei-open-roles-near-test/target/
 *.dll
 *.dll
 *.exp
