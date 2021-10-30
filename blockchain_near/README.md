@@ -7,4 +7,4 @@ This provides support the Open Roles on the NEAR blockchain. The guides for this
  
  * <a href="BUILDER.md">BUILDER.md</a> - this is the builders guide that describes how to implement OpenRoles in your NEAR Blockchain dApp 
 
-For further support join the OpenBlock EI Discord 
+**For further support join our <a href="https://rebrand.ly/obei_or_git">Discord</a> on the #admin-support, #dev-support channels** 
