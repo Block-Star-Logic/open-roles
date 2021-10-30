@@ -22,13 +22,13 @@ The rust API documentation for this implementation can be found here
 ### User Facing
 To access your Open Roles deployment from your dApp in a user facing capacity you need to do the following 
 
-1. Implement the ```obei_or_near_core::or_traits::TOpenRoles``` trait in your dApp 
+1. Implement the ```open-block-ei-open-roles-near-core::or_traits::TOpenRoles``` trait in your dApp 
 2. Deploy your Open Roles instance - to deploy Open Roles follow the instructions in the <a href="ADMIN.md">Administrators Guide</a>. 
 3. Configure your Role Matrix (NOTE: each operation in your dApp can only be assigned one participant list).
 
 ### Administrator Facing
 To access your Open Roles deployment from your dApp in an administrator facing capacity e.g. for bulk work utilities, you need to do the following:
-1. Implement the ```obei_or_near_core::or_traits::TOpenRolesAdmin``` trait in your dApp
+1. Implement the ```open-block-ei-open-roles-near-core::or_traits::TOpenRolesAdmin``` trait in your dApp
 2. Deploy your Open Roles instance - to deploy Open Roles follow the instructions in the <a href="ADMIN.md">Administrators Guide</a>. 
 3. Configure your Role Matrix 
 
