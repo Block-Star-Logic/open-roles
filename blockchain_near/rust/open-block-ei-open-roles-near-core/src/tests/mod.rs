@@ -1,14 +1,13 @@
-
+#![allow(unused_imports)]
 use near_sdk::{env,};
+
 
 #[cfg(test)]
 
 use near_sdk::MockedBlockchain;
 use near_sdk::{testing_env, VMContext};
 
-// part of writing unit tests is setting up a mock context
-// in this example, this is only needed for env::log in the contract
-// this is also a useful list to peek at when wondering what's available in env::*
+
 fn get_context(input: Vec<u8>, is_view: bool) -> VMContext {
     VMContext {
         current_account_id: "or_admin.testnet".to_string(),
@@ -68,9 +67,9 @@ fn test_is_allowed() {
     testing_env!(context);
     
     let or_governor = get_default_or();
-    assert_eq!(true, or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_green".to_string(), "test_user_account_beta.testnet".to_string()));
+    assert_eq!(1, or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_green".to_string(), "test_user_account_beta.testnet".to_string()));
 
-    assert_eq!(false, or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_green".to_string(), "test_user_account_gamma.testnet".to_string()))
+    assert_eq!(0, or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_green".to_string(), "test_user_account_gamma.testnet".to_string()))
 
 }
 
@@ -80,9 +79,9 @@ fn test_is_barred(){
     testing_env!(context);
     
     let or_governor = get_default_or();
-    assert_eq!(true, or_governor.is_barred("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_red".to_string(), "test_user_account_gamma.testnet".to_string()));
+    assert_eq!(1, or_governor.is_barred("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_red".to_string(), "test_user_account_gamma.testnet".to_string()));
 
-    assert_eq!(false, or_governor.is_barred("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_red".to_string(), "test_user_account_beta.testnet".to_string()))
+    assert_eq!(0, or_governor.is_barred("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_red".to_string(), "test_user_account_beta.testnet".to_string()))
 
 }
 
@@ -144,7 +143,7 @@ fn test_assign_list_to_operation(){
     
     or_governor.assign_list_to_operation("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_blue".to_string(), "test_allow_next".to_string());
     
-    assert!(or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_blue".to_string(), "bob.testnet".to_string()))
+    assert_eq!(1, or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_blue".to_string(), "bob.testnet".to_string()))
 }
 
 #[test]//@ done
@@ -210,7 +209,7 @@ fn test_add_account_id_to_list(){
 
     or_governor.add_account_id_to_list("test_user_account_theta.testnet".to_string(), "test_barred_list".to_string());
 
-    assert_eq!(true, or_governor.is_barred("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_red".to_string(), "test_user_account_theta.testnet".to_string()));
+    assert_eq!(1, or_governor.is_barred("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_red".to_string(), "test_user_account_theta.testnet".to_string()));
 }
 
 #[test] //@ done
@@ -222,7 +221,7 @@ fn test_remove_account_from_list(){
 
     or_governor.remove_account_from_list("test_user_account_alpha.testnet".to_string(),"test_allow_list".to_string());
 
-    assert_eq!(false, or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_green".to_string(), "test_user_account_alpha.testnet".to_string()));
+    assert_eq!(0, or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_green".to_string(), "test_user_account_alpha.testnet".to_string()));
 
 }
 

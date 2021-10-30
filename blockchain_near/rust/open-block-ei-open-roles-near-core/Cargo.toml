@@ -1,5 +1,5 @@
 [package]
-name = "obei_or_near_core"
+name = "open-block-ei-open-roles-near-core"
 version = "0.1.0"
 authors = ["Block Star Logic"]
 edition = "2018"
@@ -11,6 +11,7 @@ crate-type = ["cdylib", "rlib"]
 near-sdk = "3.1.0"
 near-contract-standards = "3.1.0"
 serde = "1.0.57"
+chrono = "0.4.19"
 
 [profile.release]
 codegen-units = 1

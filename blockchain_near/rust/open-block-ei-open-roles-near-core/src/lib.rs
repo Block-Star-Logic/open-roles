@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+#![allow(unused_imports)]
 //! SPDX-License-Identifier: APACHE 2.0 
 //!
 //! # OpenRoles crate for NEAR blockchain 
@@ -27,7 +28,7 @@ mod tests;
 mod or_structs;
 
 use std::collections::{HashMap, HashSet};
-
+use chrono::{Utc};
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{env, near_bindgen};
 use or_structs::{AssignmentAddress, DependentContract, ParticipantList};
@@ -40,6 +41,8 @@ struct OpenRoles{
 	
 	role_administrator : String, //administers all the accounts 
 	
+	id : String, // name of this 
+
 	contract_by_contract_name_by_contract_account_id : HashMap<String, HashMap<String, or_structs::DependentContract>>, // main data store
 	
 	lists :HashMap<String, or_structs::ParticipantList>, // participant lists 
@@ -47,6 +50,10 @@ struct OpenRoles{
 	operation_assignment_address_by_list : HashMap<String, HashSet<or_structs::AssignmentAddress>>, // view of list operation assignments 
 
 	list_names : HashSet<String>, // participant list names 
+
+	affirmative : i32, // affirmative value
+
+	negative : i32, // negative value 
 
 }
 
@@ -61,26 +68,32 @@ impl OpenRoles{
 		"0.1.0".to_string()
 	}
 
+
+	/// Returns the id of this instance which was set on creation 
+	/// # Return Value 
+	/// This function returns :
+	/// **String** with id in format OBEI OPEN ROLES {deployer-account-id}-{deployment-time-millis}
+	pub fn get_id(&self) -> String {
+		self.id.to_string()
+	}
+
 	/// Checks whether the given on chain **'user_account_id'**  is allowed to access the stated operation (function)
 	/// <br/> This operation provides the implementation for **[\or_structs::TOpenRoles]**
 	/// # Return Value 
 	/// This function returns: 
-	///  **'bool'** : **true** if and only if the user is listed as allowed to access the operation 	
-	pub fn is_allowed(&self, contract_account_id : String, contract_name : String, operation : String, user_account_id : String) -> bool {
+	///  **'i32'** : value equal to **self.affirmative**  if and only if the user is listed as allowed to access the operation (default = 1)	
+	pub fn is_allowed(&self, contract_account_id : String, contract_name : String, operation : String, user_account_id : String) -> i32 {
 		if self.is_registered(contract_account_id.clone(), contract_name.clone()){
 			let  list_name = self.contract_by_contract_name_by_contract_account_id.get(&contract_account_id).unwrap().get(&contract_name).unwrap().list_name_by_operation.get(&operation).unwrap();
 			let plist = self.lists.get(list_name).unwrap();
-		
-			println!(" user id allow {} ", user_account_id);
-			if plist.status.as_bytes() != "DELETED".to_string().as_bytes() {
-				let a_result = plist.account_ids.contains(&user_account_id);
-				println!(" a result  {} list {} user {} ", a_result, plist.account_ids.len(), &user_account_id);
-				return a_result
+	
+			if plist.status.as_bytes() != "DELETED".to_string().as_bytes() && plist.account_ids.contains(&user_account_id){
+				return self.affirmative
 			}
-			false
+			return self.negative
 		}
 		else {
-			panic!(" contract : {} not registered for account {} ", contract_account_id, contract_name)
+			panic!(" CONTRACT : {} NOT REGISTERED FOR ACCOUNT : {} ", contract_account_id, contract_name)
 		}
 	}
 
@@ -88,23 +101,19 @@ impl OpenRoles{
 	/// <br/> This operation provides the implementation for **[\or_structs::TOpenRoles]**
 	/// # Return Value 
 	/// This function returns: 
-	///  **'bool'** : **true** if and only if the user is listed as barred to access the operation 
-	pub fn is_barred(&self, contract_account_id : String, contract_name :String, operation : String, user_account_id : String) -> bool {
+	///  **'i32'** : value equal to **self.affirmative** if and only if the user is listed as barred to access the operation (default = 1)	 
+	pub fn is_barred(&self, contract_account_id : String, contract_name :String, operation : String, user_account_id : String) -> i32 {
 		if self.is_registered(contract_account_id.clone(), contract_name.clone()){
 			let  list_name = self.contract_by_contract_name_by_contract_account_id.get(&contract_account_id).unwrap().get(&contract_name).unwrap().list_name_by_operation.get(&operation).unwrap();		
 			let plist = self.lists.get(list_name).unwrap();
 
-			println!(" user id barred {} ", user_account_id);
-			if plist.status.as_bytes() != "DELETED".to_string().as_bytes() {
-				let b_result = plist.account_ids.contains(&user_account_id); 
-				println!(" b result  {} list {} user {} ", b_result, plist.account_ids.len(), &user_account_id);
-				
-				return b_result
-			}
-			false
+			if plist.status.as_bytes() != "DELETED".to_string().as_bytes() && plist.account_ids.contains(&user_account_id){
+				 return self.affirmative
+			} 		
+			return self.negative
 		}
 		else {
-			panic!(" contract : {} not registered for account {} ", contract_account_id, contract_name)
+			panic!(" CONTRACT : {} NOT REGISTERED FOR ACCOUNT : {} ", contract_account_id, contract_name)
 		}
 	}
 	
@@ -144,10 +153,10 @@ impl OpenRoles{
 		else {
 			let mut ops = HashSet::<AssignmentAddress>::new(); 
 			ops.insert(assignment_address);			
-			self.operation_assignment_address_by_list.insert(list_name, ops);
+			self.operation_assignment_address_by_list.insert(list_name.clone(), ops);
 		}
 
-		"LIST ASSIGNED".to_string()
+		format!("LIST {} ASSIGNED", list_name).to_string()
 	}
 		
 	/// Removes the given **list** from the given operation on the given contract deployed on the given NEAR account id 
@@ -169,7 +178,7 @@ impl OpenRoles{
 		
 		self.operation_assignment_address_by_list.get_mut(&list_name).unwrap().remove(&assignment_address);
 
-		"LIST REMOVED".to_string()						
+		format!("LIST {} REMOVED", &list_name).to_string()						
 	}
 
 	
@@ -186,8 +195,8 @@ impl OpenRoles{
 							status : "ACTIVE".to_string(),
 						};
 		self.lists.insert(list_name.clone(), list);
-		self.list_names.insert(list_name);
-		"LIST CREATED".to_string()
+		self.list_names.insert(list_name.clone());
+		format!("LIST {} CREATED", list_name).to_string()
 	}
 
 	/// Deletes the given **list** from those available by setting the list status to **DELETED**
@@ -200,9 +209,9 @@ impl OpenRoles{
 		let plist = self.lists.get_mut(&list_name).unwrap(); 
 		plist.status = "DELETED".to_string();
 
-		&mut self.list_names.remove(&plist.name);
+		self.list_names.remove(&plist.name);
 
-		"LIST DELETED".to_string()
+		format!("LIST {} DELETED.",plist.name).to_string()
 	}
     
 	/// Adds a NEAR blockchain user_account_id to the given **list_name** from those available 
@@ -215,9 +224,9 @@ impl OpenRoles{
 		
 		OpenRoles::check_status( plist.status.to_string(), "ACTIVE".to_string());
 		
-		plist.account_ids.insert(user_account_id);
+		plist.account_ids.insert(user_account_id.clone());
 		
-		"ACCOUNT ADDED".to_string()
+		format!("ACCOUNT {} ADDED.",user_account_id).to_string()
 	}    
 	
 	/// Removes the given NEAR blockchain user_account_id from the given **list** 
@@ -232,7 +241,7 @@ impl OpenRoles{
 
 		plist.account_ids.remove(&user_account_id);
 		
-		"ACCOUNT REMOVED".to_string()
+		format!("ACCOUNT {} REMOVED.",user_account_id).to_string()
 	}	
 	
 	/// Registers the given contract as deployed on the given **contract_account_id** with the given operations 
@@ -335,15 +344,38 @@ impl OpenRoles{
 			true
 		}
 	}	
-	
+
+	/// Sets the affirmative code for this instance
+	/// <br/> Administrator Only function 
+	/// # Return Value 
+	/// This function rturns a *String* message
+	pub fn set_affirmative_code(&mut self, affirmative : i32) -> String {
+		self.administrator_only();
+		self.affirmative = affirmative; 
+		format!(" AFFIRMATIVE CODE : {} ", affirmative).to_string()
+	}
+
+	/// Sets the negative code for this instance 
+	/// <br/> Administrator Only function 
+	/// # Return Value 
+	/// This function rturns a *String* message
+	pub fn set_negative_code(&mut self, negative : i32) -> String {
+		self.administrator_only();
+		self.negative = negative;
+		format!(" NEGATIVE CODE : {} ", negative).to_string()
+	}
+
 	/// Creates a default instance of the OpenRoles contract with the administrator set to the calling NEAR account_id
 	pub fn new() -> Self {
 		Self {
 			role_administrator : env::current_account_id().to_string(),
+			id : format!("OBEI OPEN ROLES: {}-{}", env::current_account_id().to_string(), Utc::now().timestamp_millis()).to_string(),
 			contract_by_contract_name_by_contract_account_id : HashMap::<String, HashMap<String, DependentContract>>::new(),
 			lists : HashMap::<String, or_structs::ParticipantList>::new(),
 			list_names : HashSet::<String>::new(),
 			operation_assignment_address_by_list : HashMap::<String, HashSet<AssignmentAddress>>::new(),
+			affirmative : 1, 
+			negative : 0,
 		}
 	}	
 
