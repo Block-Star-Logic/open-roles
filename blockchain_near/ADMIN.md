@@ -28,7 +28,7 @@ https://github.com/Block-Star-Logic/open-roles
 3. Log in to your near account using:<br/>
 ``` > near login ``` 
 4. Deploy this release using the following command:<br/>
-``` > near deploy --accountId {deploy-account-id} --wasmFile {path-to-your-release-download}/obei_or_near_core_v{version}.wasm ```
+``` > near deploy --accountId {deploy-account-id} --wasmFile {path-to-your-release-download}/open-block-ei-open-roles-near-core-v{version}.wasm ```
 5. Test your release is deployed with the following command:<br/>
 ``` > near call {deploy-account-id} get_version --account_id {admin-account-id} ```<br/>
    This should return the version number of the release you have just deployed
