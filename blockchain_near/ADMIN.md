@@ -1,5 +1,7 @@
 # Open Roles NEAR Blockchain Administrators Guide
 
+**For further support join our <a href="https://rebrand.ly/obei_or_git">Discord</a> on the #admin-support channel**
+
 This guide has been prepared for administrators working with Open Roles on the NEAR Blockchain. It describes how to typically deploy and configure Open Roles on the NEAR Blockchain. This guide has been prepared for “no-code” administration of Open Roles. It uses the NEAR CLI to interface with the NEAR Blockchain, the installation instructions for which can be found here:
 https://docs.near.org/docs/tools/near-cli
 
@@ -210,3 +212,5 @@ To change the account that administers this Open Roles instance execute this com
 
 #### Migrate Open Roles 
 To migrate Open Roles the dependent contracts have to be configured to point to the new deployed instance.
+
+**For further support join our <a href="https://rebrand.ly/obei_or_git">Discord</a> on the #admin-support channel**
