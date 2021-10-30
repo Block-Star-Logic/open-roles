@@ -17,18 +17,21 @@ This implementation utilises cross contract calls between the dApp and the Open 
 
 ## How to implement
 
-The rust API documentation for this implementation can be found here
+The RUST API documentation for this implementation can be found on <font color="red">Docs.rs <a href="https://docs.rs/">here</a></font>
+<br/>The RUST distribution can be downloaded from <font color="red">Crates.io <a href="">here</a></font>
 
 ### User Facing
 To access your Open Roles deployment from your dApp in a user facing capacity you need to do the following 
 
-1. Implement the ```obei_or_near_core::or_traits::TOpenRoles``` trait in your dApp 
+1. Implement the ```open-block-ei-open-roles-near-core::or_traits::TOpenRoles``` trait in your dApp 
 2. Deploy your Open Roles instance - to deploy Open Roles follow the instructions in the <a href="ADMIN.md">Administrators Guide</a>. 
 3. Configure your Role Matrix (NOTE: each operation in your dApp can only be assigned one participant list).
 
 ### Administrator Facing
 To access your Open Roles deployment from your dApp in an administrator facing capacity e.g. for bulk work utilities, you need to do the following:
-1. Implement the ```obei_or_near_core::or_traits::TOpenRolesAdmin``` trait in your dApp
+1. Implement the ```open-block-ei-open-roles-near-core::or_traits::TOpenRolesAdmin``` trait in your dApp
 2. Deploy your Open Roles instance - to deploy Open Roles follow the instructions in the <a href="ADMIN.md">Administrators Guide</a>. 
 3. Configure your Role Matrix 
 
+
+**for further support join our <a href="https://rebrand.ly/obei_or_git">Discord</a> on the #dev-support channel**
