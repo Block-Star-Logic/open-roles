@@ -3,6 +3,14 @@ name = "open-block-ei-open-roles-near-core"
 version = "0.1.0"
 authors = ["Block Star Logic"]
 edition = "2018"
+description = "Decentralized role management for smart contracts on the NEAR Blockchain"
+readme = "README.md"
+homepage = "https://www.blockstarlogic.com/obei"
+repository = "https://github.com/Block-Star-Logic/open-roles"
+license = "Apache 2.0"
+keywords = ["web3", "enterprise", "role management", "NEAR", "blockchain", "smart contract"]
+categories = ["blockchain-enterprise-components", "command-line-utilities", "smart-contract-plugin"]
+
 
 [lib]
 crate-type = ["cdylib", "rlib"]

@@ -72,7 +72,7 @@ impl OpenRoles{
 	/// Returns the id of this instance which was set on creation 
 	/// # Return Value 
 	/// This function returns :
-	/// **String** with id in format OBEI OPEN ROLES {deployer-account-id}-{deployment-time-millis}
+	/// **String** with id as set by the administrator 
 	pub fn get_id(&self) -> String {
 		self.id.to_string()
 	}
@@ -131,7 +131,7 @@ impl OpenRoles{
 	}
 
 	/// Assigns the given **list** to the given operation on the given contract deployed at the given NEAR account id
-	/// <br/> Administrator Only function
+	/// <br/> *Administrator Only function*
 	/// # Return Value 
 	/// This function returns: *String* otherwise panics  
 	pub fn assign_list_to_operation(&mut self, contract_account_id : String, contract_name : String, operation : String, list_name : String) -> String {
@@ -160,7 +160,7 @@ impl OpenRoles{
 	}
 		
 	/// Removes the given **list** from the given operation on the given contract deployed on the given NEAR account id 
-	/// <br/> Administrator Only function 
+	/// <br/> *Administrator Only function*
 	/// # Return Value 
 	// This function returns *String* otherwise panics 
 	pub fn remove_list_from_operation(&mut self, contract_account_id : String, contract_name : String, operation : String) -> String {
@@ -183,7 +183,7 @@ impl OpenRoles{
 
 	
 	/// Creates the given **list** with **ACTIVE** status 
-	/// <br/> Administrator Only function 
+	/// <br/> *Administrator Only function* 
 	/// # Return Value 
 	/// This function returns *String* otherwise panics 
 	pub fn create_list(&mut self, list_name : String, list_type : String) -> String {
@@ -200,7 +200,7 @@ impl OpenRoles{
 	}
 
 	/// Deletes the given **list** from those available by setting the list status to **DELETED**
-	/// <br/> Administrator Only function 
+	/// <br/> *Administrator Only function*
 	/// # Return Value 
 	/// This function returns *String* otherwise panics  
 	pub fn delete_list(&mut self, list_name : String) -> String {
@@ -215,7 +215,7 @@ impl OpenRoles{
 	}
     
 	/// Adds a NEAR blockchain user_account_id to the given **list_name** from those available 
-	/// <br/> Administrator Only function
+	/// <br/> *Administrator Only function*
 	/// # Return Value 
 	/// This function returns *String* otherwise panics  
 	pub fn add_account_id_to_list(&mut self, user_account_id : String, list_name : String) -> String {
@@ -230,7 +230,7 @@ impl OpenRoles{
 	}    
 	
 	/// Removes the given NEAR blockchain user_account_id from the given **list** 
-	/// <br/> Administrator Only function
+	/// <br/> *Administrator Only function*
 	/// # Return Value 
 	/// This function returns *String* otherwise panics  	
 	pub fn remove_account_from_list(&mut self, user_account_id : String, list_name : String) -> String {
@@ -245,7 +245,7 @@ impl OpenRoles{
 	}	
 	
 	/// Registers the given contract as deployed on the given **contract_account_id** with the given operations 
-	/// <br/> Administrator Only function
+	/// <br/> *Administrator Only function*
 	/// # Return Value 
 	/// This function returns *String* otherwise panics  
 	pub fn register_contract(&mut self, contract_account_id : String, contract_name : String, ops : Vec<String>) -> String {
@@ -288,7 +288,7 @@ impl OpenRoles{
 	}	
 	
 	/// Deregisters the given NEAR **contract** deployed at the given NEAR blockchain **contract_account_id**
-	/// <br/> Administrator Only function
+	/// <br/> *Administrator Only function*
 	/// # Return Value 
 	/// This function returns *String* otherwise panics  
 	pub fn deregister_contract(&mut self, contract_account_id : String, contract_name : String) -> String {
@@ -300,7 +300,7 @@ impl OpenRoles{
 	}		
 	
 	/// Provides a list of list_names currently held by this instance. This will include names of **DELETED** lists 
-	/// <br/> Administrator Only function
+	/// <br/> *Administrator Only function*
 	/// # Return Value 
 	/// This function returns *String* otherwise panics  
 	pub fn view_list_names(&self) -> HashSet<String>{
@@ -310,7 +310,7 @@ impl OpenRoles{
 
 		
 	/// Provides a view of the list consisting of the name, type, NEAR account ids held and status of the list 
-	/// <br/> Administrator Only function
+	/// <br/> *Administrator Only function*
 	/// # Return Value 
 	/// This function returns a tuple otherwise panics 
 	pub fn view_list(&self, list_name : String) -> (/*name*/ String,  /*type*/ String, /*ids*/ HashSet<String>, /*status*/ String) { 
@@ -321,7 +321,7 @@ impl OpenRoles{
    	
 
 	/// Provides a view of the currently assigned role administrator for this instance 
-	/// <br/> Administrator Only function
+	/// <br/> *Administrator Only function*
 	/// # Return Value 
 	/// This function returns a *String* otherwise panics
 	pub fn view_role_administrator(&self)-> String{
@@ -329,8 +329,8 @@ impl OpenRoles{
 	}
 
 	
-	/// Sets the role administrator for this instance 
-	/// <br/> Administrator Only function
+	/// Sets the role administrator for this instance MUST be set after deployment
+	/// <br/> *Administrator Only function*
 	/// # Return Value 
 	/// This function returns a *String* otherwise panics
 	pub fn set_role_administrator(&mut self, account_id : String) -> bool { 
@@ -345,18 +345,18 @@ impl OpenRoles{
 		}
 	}	
 
-	/// Sets the id for this instance 
-	/// <br/> Administrator only function 
-	/// #REturn Value 
-	/// *true* if the instance id is set
+	/// Sets the id for this instance MUST be set after deployment
+	/// <br/> *Administrator Only function* 
+	/// # Return Value 
+	/// *true* if the instance 'id' is set
 	pub fn set_instance_id(&mut self, instance_id : String) -> bool { 
 		self.administrator_only();
 		self.id = instance_id; 
 		true 
 	}
 
-	/// Sets the affirmative code for this instance
-	/// <br/> Administrator Only function 
+	/// Sets the affirmative code for this instance MUST be set after deployment
+	/// <br/> *Administrator Only function* 
 	/// # Return Value 
 	/// This function rturns a *String* message
 	pub fn set_affirmative_code(&mut self, affirmative : i32) -> String {
@@ -365,8 +365,8 @@ impl OpenRoles{
 		format!(" AFFIRMATIVE CODE : {} ", affirmative).to_string()
 	}
 
-	/// Sets the negative code for this instance 
-	/// <br/> Administrator Only function 
+	/// Sets the negative code for this instance MUST be set after deployment
+	/// <br/> *Administrator Only function* 
 	/// # Return Value 
 	/// This function rturns a *String* message
 	pub fn set_negative_code(&mut self, negative : i32) -> String {
@@ -375,7 +375,7 @@ impl OpenRoles{
 		format!(" NEGATIVE CODE : {} ", negative).to_string()
 	}
 
-	/// Creates a default instance of the OpenRoles contract with the administrator set to the calling NEAR account_id
+	/// Creates a default instance of the OpenRoles contract
 	pub fn new() -> Self {
 		Self {
 			role_administrator : env::current_account_id().to_string(),
@@ -389,7 +389,7 @@ impl OpenRoles{
 		}
 	}	
 
-	/// Creates a new instace of the OpenRoles contract 
+	/// Creates a new instance of the OpenRoles contract 
 	pub fn default() -> Self {
 		OpenRoles::new()
 	}
