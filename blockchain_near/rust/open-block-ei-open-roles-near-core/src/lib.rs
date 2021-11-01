@@ -345,6 +345,16 @@ impl OpenRoles{
 		}
 	}	
 
+	/// Sets the id for this instance 
+	/// <br/> Administrator only function 
+	/// #REturn Value 
+	/// *true* if the instance id is set
+	pub fn set_instance_id(&mut self, instance_id : String) -> bool { 
+		self.administrator_only();
+		self.id = instance_id; 
+		true 
+	}
+
 	/// Sets the affirmative code for this instance
 	/// <br/> Administrator Only function 
 	/// # Return Value 
@@ -392,11 +402,16 @@ impl OpenRoles{
 	}
 	 
 	fn administrator_only(&self) -> bool {
-		let caller = env::current_account_id().to_string();
-		if caller != self.role_administrator {
-			panic!( "ROLE ADMINISTRATOR ONLY");
+		if self.role_administrator == "" {
+			panic!( "ADMINISTRATOR NOT SET");
+		}
+
+		let caller = env::signer_account_id().to_string();
+		if caller.as_bytes() == self.role_administrator.to_string().as_bytes() {
+			return true; 	
 		}	
-		true 
+		panic!( "ROLE ADMINISTRATOR ONLY");
+	
 	}
 
 }
