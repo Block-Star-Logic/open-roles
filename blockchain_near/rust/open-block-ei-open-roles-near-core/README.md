@@ -1,6 +1,6 @@
  <img src="https://github.com/Block-Star-Logic/open-roles/blob/82b9bebfe2a78a75d5e3f0540ab14207ffbd0e44/images/open_roles_logo.png" width="75" height="75"/> 
 
-** Openroles is a blockchain component smart contract for managing decentralized governance within enterprise class smart contracts on the NEAR Blockchain**
+**Openroles is a blockchain component smart contract for managing decentralized governance within enterprise class smart contracts on the NEAR Blockchain**
 
 ## What is it?
 
