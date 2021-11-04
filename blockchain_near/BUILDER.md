@@ -17,8 +17,8 @@ This implementation utilises cross contract calls between the dApp and the Open 
 
 ## How to implement
 
-The RUST API documentation for this implementation can be found on <font color="red">Docs.rs <a href="https://docs.rs/">here</a></font>
-<br/>The RUST distribution can be downloaded from <font color="red">Crates.io <a href="">here</a></font>
+The RUST API documentation for this implementation can be found on <font color="red">Docs.rs <a href="https://docs.rs/open-block-ei-open-roles-near-core/0.1.0/open_block_ei_open_roles_near_core/">here</a></font>
+<br/>The RUST distribution can be downloaded from <font color="red">Crates.io <a href="https://crates.io/crates/open-block-ei-open-roles-near-core">here</a></font>
 
 ### User Facing
 To access your Open Roles deployment from your dApp in a user facing capacity you need to do the following 
