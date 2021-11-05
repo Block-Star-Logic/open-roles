@@ -230,7 +230,7 @@ To change the *affirmative code* for the deployed instance of Open Roles instanc
 * **WARNING** changing the Affirmative Code can have serious consequences on any dependent in LIVE dapps
 
 	
-#### Change Instance Id <span id="change instance id></span>
+#### Change Instance Id <span id="change instance id"></span>
 To change the *negative code* for the deployed instance of Open Roles instance execute this command:<br/>
 ``` > near call ${deploy-account-id} set_instance_id {"instance_id" : "${instance-id}"} --account_id ${admin-account-id} ```<br/>
 **NOTE:** 
