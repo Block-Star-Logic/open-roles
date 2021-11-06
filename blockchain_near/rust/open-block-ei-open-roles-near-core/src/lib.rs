@@ -65,10 +65,9 @@ impl OpenRoles{
 	/// This function returns:
 	/// **String** with code version 
 	pub fn get_version(&self) -> String {
-		"0.1.0".to_string()
+		"0.1.1".to_string()
 	}
-
-
+	
 	/// Returns the id of this instance which was set on creation 
 	/// # Return Value 
 	/// This function returns :
@@ -334,15 +333,9 @@ impl OpenRoles{
 	/// # Return Value 
 	/// This function returns a *String* otherwise panics
 	pub fn set_role_administrator(&mut self, account_id : String) -> bool { 
-		if self.role_administrator.clone().as_bytes() == "".as_bytes() { // if unset
-			self.role_administrator = account_id;
-			true
-		}
-		else {
-			self.administrator_only();
-			self.role_administrator = account_id; 
-			true
-		}
+		self.administrator_only();
+		self.role_administrator = account_id; 		
+		true
 	}	
 
 	/// Sets the id for this instance MUST be set after deployment
@@ -375,24 +368,27 @@ impl OpenRoles{
 		format!(" NEGATIVE CODE : {} ", negative).to_string()
 	}
 
-	/// Creates a default instance of the OpenRoles contract
-	pub fn new() -> Self {
+	/// Creates an instance of the OpenRoles contract
+	/// # Return Value 
+	/// This function creates an instance with the given configuration
+	#[init]
+	pub fn new( role_administrator :String, instance_id : String, affirmative_code : i32, negative_code : i32 ) -> Self {
 		Self {
-			role_administrator : env::current_account_id().to_string(),
-			id : format!("OBEI OPEN ROLES: {}-{}", env::current_account_id().to_string(), Utc::now().timestamp_millis()).to_string(),
+			role_administrator,
+			id : instance_id,
 			contract_by_contract_name_by_contract_account_id : HashMap::<String, HashMap<String, DependentContract>>::new(),
 			lists : HashMap::<String, or_structs::ParticipantList>::new(),
 			list_names : HashSet::<String>::new(),
 			operation_assignment_address_by_list : HashMap::<String, HashSet<AssignmentAddress>>::new(),
-			affirmative : 1, 
-			negative : 0,
+			affirmative : affirmative_code, 
+			negative : negative_code,
 		}
 	}	
 
-	/// Creates a new instance of the OpenRoles contract 
-	pub fn default() -> Self {
-		OpenRoles::new()
-	}
+	/// Call the new( function )
+    pub fn default() -> Self { 
+        panic!("OPEN ROLES REQUIRES INITIALISATION ON DEPLOYMENT")
+    }
 
 	fn check_status( base : String, required : String) {
 		if base.as_bytes() == required.as_bytes() {
@@ -410,7 +406,7 @@ impl OpenRoles{
 		if caller.as_bytes() == self.role_administrator.to_string().as_bytes() {
 			return true; 	
 		}	
-		panic!( "ROLE ADMINISTRATOR ONLY");
+		panic!( "ROLE ADMINISTRATOR ONLY - CALLER {} ", caller);
 	
 	}
 

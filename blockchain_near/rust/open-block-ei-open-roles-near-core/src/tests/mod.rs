@@ -7,6 +7,8 @@ use near_sdk::{env,};
 use near_sdk::MockedBlockchain;
 use near_sdk::{testing_env, VMContext};
 
+const AFFIRMATIVE_CODE : i32 = 10; 
+const NEGATIVE_CODE : i32= 20; 
 
 fn get_context(input: Vec<u8>, is_view: bool) -> VMContext {
     VMContext {
@@ -30,7 +32,7 @@ fn get_context(input: Vec<u8>, is_view: bool) -> VMContext {
 }
 
 fn get_default_or()-> super::OpenRoles {
-    let mut or = super::OpenRoles::new();
+    let mut or = super::OpenRoles::new("or_signer.testnet".to_string(), "test_open_roles".to_string(), 10, 20);
 
     or.create_list("test_allow_list".to_string(), "ALLOW".to_string());
     or.create_list("test_barred_list".to_string(), "BARRED".to_string());
@@ -67,9 +69,9 @@ fn test_is_allowed() {
     testing_env!(context);
     
     let or_governor = get_default_or();
-    assert_eq!(1, or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_green".to_string(), "test_user_account_beta.testnet".to_string()));
+    assert_eq!(AFFIRMATIVE_CODE, or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_green".to_string(), "test_user_account_beta.testnet".to_string()));
 
-    assert_eq!(0, or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_green".to_string(), "test_user_account_gamma.testnet".to_string()))
+    assert_eq!(NEGATIVE_CODE, or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_green".to_string(), "test_user_account_gamma.testnet".to_string()))
 
 }
 
@@ -79,9 +81,9 @@ fn test_is_barred(){
     testing_env!(context);
     
     let or_governor = get_default_or();
-    assert_eq!(1, or_governor.is_barred("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_red".to_string(), "test_user_account_gamma.testnet".to_string()));
+    assert_eq!(AFFIRMATIVE_CODE, or_governor.is_barred("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_red".to_string(), "test_user_account_gamma.testnet".to_string()));
 
-    assert_eq!(0, or_governor.is_barred("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_red".to_string(), "test_user_account_beta.testnet".to_string()))
+    assert_eq!(NEGATIVE_CODE, or_governor.is_barred("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_red".to_string(), "test_user_account_beta.testnet".to_string()))
 
 }
 
@@ -118,7 +120,7 @@ fn test_view_role_administrator(){
     testing_env!(context);
     
     let or_governor = get_default_or();
-    let env_admin = env::current_account_id();
+    let env_admin = env::signer_account_id();
     assert_eq!(env_admin.to_string(), or_governor.view_role_administrator().to_string())
 }
 
@@ -143,7 +145,7 @@ fn test_assign_list_to_operation(){
     
     or_governor.assign_list_to_operation("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_blue".to_string(), "test_allow_next".to_string());
     
-    assert_eq!(1, or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_blue".to_string(), "bob.testnet".to_string()))
+    assert_eq!(AFFIRMATIVE_CODE, or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_blue".to_string(), "bob.testnet".to_string()))
 }
 
 #[test]//@ done
@@ -209,7 +211,7 @@ fn test_add_account_id_to_list(){
 
     or_governor.add_account_id_to_list("test_user_account_theta.testnet".to_string(), "test_barred_list".to_string());
 
-    assert_eq!(1, or_governor.is_barred("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_red".to_string(), "test_user_account_theta.testnet".to_string()));
+    assert_eq!(AFFIRMATIVE_CODE, or_governor.is_barred("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_red".to_string(), "test_user_account_theta.testnet".to_string()));
 }
 
 #[test] //@ done
@@ -221,7 +223,7 @@ fn test_remove_account_from_list(){
 
     or_governor.remove_account_from_list("test_user_account_alpha.testnet".to_string(),"test_allow_list".to_string());
 
-    assert_eq!(0, or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_green".to_string(), "test_user_account_alpha.testnet".to_string()));
+    assert_eq!(NEGATIVE_CODE, or_governor.is_allowed("test_deploy_account".to_string(), "test_contract".to_string(), "test_op_green".to_string(), "test_user_account_alpha.testnet".to_string()));
 
 }
 
