@@ -31,18 +31,12 @@ https://github.com/Block-Star-Logic/open-roles
 3. Log in to your near account using:<br/>
 ``` > near login ``` 
 4. Deploy this release using the following command:<br/>
-``` > near deploy --accountId ${deploy-account-id} --wasmFile ${path-to-your-release-download}/open-block-ei-open-roles-near-core.wasm ```
+``` > near deploy ${deployment account} --wasmFile target/wasm32-unknown-unknown/release/open_block_ei_open_roles_near_core.wasm --initFunction new --initArgs {"role_administrator":"${role administrator}", "instance_id":"${instance id}","affirmative_code":${affirmative code}, "negative_code":${negative code}}--accountId ${deployer account id}``
 5. Test your release is deployed with the following command:<br/>
 ``` > near call ${deploy-account-id} get_version --account_id ${admin-account-id} ```<br/>
    This should return the version number of the release you have just deployed
 6. You will then need to run the following command:<br/>
 ``` > near call ${deploy-account-id} view_role_administrator --account_id ${admin-account-id} ```<br/>
-7. You will then need to run the following command:<br/>
-``` > near call ${deploy-account-id} set_role_administrator {"account_id" : "${new_admin_account}"} --account_id ${admin-account-id} ```<br/>
-8. You will then need to complete your deployment by running the following command:<br/>
-``` > near call ${deploy-account-id} set_instance_id {"instance_id" : "${instance-id}"} --account_id ${admin-account-id} ```<br/>
-
-
 
 ## Configuration 
 The following describes how to configure a newly deployed instance of Open Roles. For maintenance of an existing deployment of Open Roles see Maintenance Tasks. 
