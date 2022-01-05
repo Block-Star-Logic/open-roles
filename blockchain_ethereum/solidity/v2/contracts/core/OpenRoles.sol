@@ -1,97 +1,117 @@
-//"SPDX-License-Identifier: UNLICENSED"
+//"SPDX-License-Identifier: APACHE 2.0"
 
 pragma solidity >=0.8.0 <0.9.0;
+ /**
+  * @title Open Roles Core - Open Block Enterprise Initiative Role Management contract
+  * @author Block Star Logic
+  * @dev This is the next iteration of Open Roles. This is the standard implementation that can be deployed into your contract network.  
+  *  
+  */
+import "./IOpenRoles.sol";
 
-import "../interfaces/IOpenRoles.sol";
-import "../interfaces/IOpenRolesEditor.sol";
+import "./OpenRolesAdmin.sol"; 
 
-contract OpenRoles is IOpenRoles, IOpenRolesEditor { 
+import "./IOpenVersion.sol";
 
-   // role -> contract address -> function -> allowed
-    mapping(string=>mapping(address=>mapping(string=>bool))) allowByRoleAddressFunction; 
+contract OpenRoles is IOpenRoles, IOpenVersion { 
 
-    // contract address -> function -> role -> allowed
-    mapping(address=>mapping(string=>mapping(string=>bool))) allowByaddressFunctionRole;
+    uint version = 2;
+    string name; 
+    OpenRolesAdmin admin; 
 
-    // role -> user address -> has role 
-    mapping(string=>mapping(address=>bool)) hasAddressByRole; 
+    constructor(string memory _name, address _openRolesAdminAddress, string memory _pass) {
+        name = _name; 
+        admin = OpenRolesAdmin(_openRolesAdminAddress);
+        admin.linkOpenRoles( address(this), _pass);
+    }
 
-    // user address -> role -> has role 
-    mapping(address=>mapping(string=>bool)) hasRoleByAddress; // allow list
+    function getVersion() override view external returns (uint256 _version){
+        return version; 
+    }
 
-    // user address -> role -> contract address -> has role 
-    mapping(address=>mapping(string=>mapping(address=>bool)))  hasRoleForAddressByUserAddress;
+    function getName() override view external returns (string memory _contractName){
+        return name; 
+    }
 
-    // contract address -> user address -> role 
-    mapping(address=>mapping(address=>string)) userRoleForAddress;
-
-    // posting -> owner -> is owner
-    mapping(address=>mapping(address=>bool)) postingOwnerByPosting; 
-
-    // contract address -> user address -> is barred
-    mapping(address=>mapping(address=>bool)) barredBySenderAddress;
-
-    // contract address -> role -> user address -> is barred
-    mapping(address=>mapping(string=>mapping(address=>bool))) barredByRoleSenderAddress;
-
-    // contract address -> function -> role -> user address -> is barred
-    mapping(address=>mapping(string=>mapping(string=>mapping(address=>bool)))) barredBySenderRoleFunctionAddress;
-
-    mapping(address=>bool) bannedAddress; 
-
-    mapping(address=>bool) isKnownAddress; 
 
     // dApp scope
-    function isAllowed(string memory _dApp, string memory _role, address _contract, string memory _function, address _srcSender ) override view external returns (bool _isAllowed){
+    function isAllowed(string memory _dApp, string memory _role, address _contract, string memory _function, address _srcSender ) override view external returns (bool _isAllowed) {}
 
-    }
+    function isBarred(string memory _dApp, string memory _role, address _contract, string memory _function, address _srcSender ) override view external returns (bool _isBarred){}
 
-    function isBarred(string memory _dApp, string memory _role, address _contract, string memory _function, address _srcSender ) override view external returns (bool _isBarred){
-
-    }
-
-    function getRolesForDapp(string memory _dApp) override view external returns (string [] memory _roleNames){
-
-    }
-
-    function getContractsForDapp(string memory _dApp) override view external returns (address [] memory _contacts, string [] memory _names){
-
-    }
+    function getRolesForDapp(string memory _dApp) override view external returns (string [] memory _roleNames){}
+    function getContractsForDapp(string memory _dApp) override view external returns (address [] memory _contacts, string [] memory _names){}
     
-    function getUserAddressesForRoleForDapp(string memory _dApp, string memory _role) override view external returns (address [] memory _userAddresses){
+    function getUserAddressesForRoleForDapp(string memory _dApp, string memory _role) override view external returns (address [] memory _userAddresses){}
 
-    }
+    function getContractsForRoleForDapp(string memory _dApp, string memory _role)override  view external returns (address [] memory _contracts, string [] memory _names){}
 
-    function getContractsForRoleForDapp(string memory _dApp, string memory _role) override view external returns (address [] memory _contracts, string [] memory _names){
-
-    }
-
-    function getFunctionPermissionsForRoleForContractForDapp(string memory _dApp, string memory _role, address _contract) override view external returns (string [] memory _functions, string [] memory _permision){
-
-    }
+    function getFunctionPermissionsForRoleForContractForDapp(string memory _dApp, string memory _role, address _contract) override view external returns (string [] memory _functions){}
 
 
     // contact scope 
-    function isAllowed(address _contract, string memory _role, string memory _function, address _srcSender ) override view external returns (bool _isAllowed){
+    function isAllowed(address _contract, string memory _role, string memory _function, address _srcSender ) override view external returns (bool _isAllowed){}
+
+    function isBarred(address _contract, string memory _role, string memory _function, address _srcSender ) override view external returns (bool _isBarred){}
+
+    function getRolesForContract(address _contract) override view external returns (string [] memory _roleNames){}
+
+    function getFunctionsForRoleforContract(address _contract, string memory _role) override view external returns (string [] memory _functions){}
+
+    function getUserAddressesForRoleForContract(address _contract, string memory _role) override view external returns (address [] memory _userAddresses){}
+
+    function getFunctionPermissionsForRoleForContract(address _contract, string memory _role) override view external returns (string [] memory _functions){}
+
+            // derivative contracts 
+    function addDerivativeContract(string memory _dApp, address _derivativeContractAddress, string memory _contractType) override external returns (bool _added){
 
     }
 
-    function isBarred(address _contract, string memory _role, string memory _function, address _srcSender ) override view external returns (bool _isBarred){
+    function removeDerivativeContract(address _derivativeContractAddress) override external returns (bool _removed){
 
     }
 
-    function getRolesForContract(address _contract) override view external returns (string [] memory _roleNames){
+        // roles for derivative contract
+    function addRolesForDerivativeContract(address _derivativeContractAddress, string [] memory roles) override external returns (bool _added){
 
     }
 
-    function getFunctionsForRoleforContract(address _contract, string memory _role) override view external returns (string [] memory _functions){
+    function removeRolesForDerivativeContract(address _derivativeContractAddress, string [] memory roles) override external returns (bool _removed){
 
     }
 
-    function getUserAddressesForRoleForContract(address _contract, string memory _role) override view external returns (address [] memory _userAddresses){
+        // functions for derivative contract
+    function addFunctionsForRoleForDerivativeContract(address _derivativeContractAddress, string memory _role, string [] memory _functions) override external returns (bool _added){
+
     }
 
-    function getFunctionPermissionsForRoleForContract(address _contract, string memory _role) override view external returns (string [] memory _functions, string [] memory _permision){
+    function removeFunctionsForRoleForDerivativeContract(address _derivativeContractAddress, string memory _role, string [] memory _functions) override external returns (bool _removed){
+
+    }
+
+        // users for derivative contract
+    function addUsersForRoleForDerivativeContract(address _derivativeContractAddress, string memory _role, address [] memory _users) override external returns (bool _added){
+    
+    }
+
+    function removeUsersForRoleForDerivativeContract(address _derivativeContractAddress, string memory _role, address [] memory _users) override external returns (bool _removed){
+
+    }
+
+    // admin functions 
+    function listDerivativeContractAddressesForContractTypeForDapp(string memory _dapp, string[] memory _contractType) external returns (address [] memory _derivativeContractAddresses, string [] memory _derivativeContactTypes) {
+
+    }
+
+    function listDerivativeContractTypesForAddress(address _derivativeContractAddres) view external returns (string [] memory _derivativeContractTypes){ 
+
+    }
+
+    function getDapp(address _derivativeContractAddress) view external returns (string memory _dApp){
+
+    }
+
+    function getLocalUsers(address _derivativeContractAddress) view external returns (string [] memory _userAddresses) {
 
     }
 
