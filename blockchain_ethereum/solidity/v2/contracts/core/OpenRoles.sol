@@ -7,11 +7,13 @@ pragma solidity >=0.8.0 <0.9.0;
   * @author Block Star Logic
   * @dev This is the next iteration of Open Roles. This is the standard implementation that can be deployed into your contract network.  
   */
-import "./IOpenRoles.sol";
+import "https://github.com/Block-Star-Logic/open-version/blob/main/blockchain_ethereum/solidity/V1/interfaces/IOpenVersion.sol";
 
-import "./OpenRolesAdmin.sol"; 
+import "https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRoles.sol";
 
-import "https://github.com/Block-Star-Logic/open-version/blob/3211dff2ed53298e2777f26d58f54dd96551cfea/blockchain_ethereum/solidity/V1/interfaces/IOpenVersion.sol";
+import "https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_ethereum/solidity/v2/contracts/core/OpenRolesAdmin.sol"; 
+
+
 
 contract OpenRoles is IOpenRoles, IOpenVersion { 
 

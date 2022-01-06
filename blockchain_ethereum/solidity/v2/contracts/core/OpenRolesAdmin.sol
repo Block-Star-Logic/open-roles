@@ -2,19 +2,13 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
-/**
- * @title OpenRolesAdmin - Open Block Enterprise Initiative Role Management Contract 
- * @author Block Star Logic 
- * @dev Open Roles Admin is responsible for role management in your DApp.  
- */
+import "https://github.com/Block-Star-Logic/open-libraries/blob/main/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
 
-import "./IOpenVersion.sol";
+import "https://github.com/Block-Star-Logic/open-version/blob/main/blockchain_ethereum/solidity/V1/interfaces/IOpenVersion.sol";
 
-import "./IOpenRolesAdmin.sol";
+import "https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesAdmin.sol";
 
-import "./LOpenUtilities.sol";
-
-import "./OpenRoles.sol";
+import "https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_ethereum/solidity/v2/contracts/core/OpenRoles.sol";
 
 contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin {
 
@@ -23,7 +17,7 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin {
     using LOpenUtilities for address; 
 
     string name; 
-    uint256 version = 1; 
+    uint256 version = 2; 
 
     address rootAdmin; 
 
@@ -32,6 +26,10 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin {
     OpenRoles openRoles; 
 
     bool openRolesLinked;
+
+    string [] passList; 
+
+    mapping(string=>uint256) passUsageByPass; 
 
     mapping(string=>bool) isKnownDappByDapp;
 
@@ -64,7 +62,7 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin {
     mapping(string=>mapping(string=>address[])) usersByRoleByDapp; 
     mapping(string=>mapping(string=>mapping(address=>bool))) isKnownUserByRoleByDapp; 
 
-    mapping(address=>bool) isOpenRolesRegisteredByOpenRolesAddress; 
+    
 
     constructor(string memory _name, address _rootAdmin) {
         name = _name; 
@@ -80,14 +78,14 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin {
     }
 
 
-    function linkOpenRoles(address _openRolesAddress, string memory _pass) external returns (bool _registered) {
+    function linkOpenRoles(address _openRolesAddress, string memory _pass) external returns (bool _linked) {
         doPassSecurity(msg.sender, "linkOpenRoles", _openRolesAddress, _pass); 
         openRoles = OpenRoles(_openRolesAddress);
         openRolesLinked = true; 
         return true; 
     }
 
-    function unlinkOpenRoles(address _openRolesAddress) external returns (bool _deregistered) {
+    function unlinkOpenRoles() external returns (bool _unlinked) {
         doSecurity(msg.sender, "unlinkOpenRoles");
         openRoles = OpenRoles(address(0));
         openRolesLinked = false;
@@ -297,7 +295,7 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin {
             contractsByRoleByDapp[_dApp][_role].push(contract_); 
             isKnownContractByRoleByDapp[_dApp][_role][contract_] = true;
             
-            require(!isKnownRoleByDappByContract[contract_][_dApp][_role], string(" Open Roles Admin - addContractsForRoleForDapp : 01 : - attempted to add known role for contract  for dApp : ").append(_role));
+            require(!isKnownRoleByDappByContract[contract_][_dApp][_role], string(" Open Roles Admin - addContractsForRoleForDapp : 01 : - attempted to add known role for contract  for dApp : ").append(_role).append(" : ").append(string(abi.encodePacked(contract_))));
 
             rolesByDappByContract[contract_][_dApp].push(_role);
             isKnownRoleByDappByContract[contract_][_dApp][_role] = true; 
@@ -333,7 +331,7 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin {
         doSecurity(msg.sender, "addFunctionForRoleForContractForDapp");
         for(uint256 x = 0; x < _functions.length; x++){
             string memory function_ = _functions[x];
-            require(!isKnownFunctionsByContractByRoleByDapp[_dApp][_role][_contract][function_], string(" Open Roles Admin - addFunctionForRoleForContractForDapp : 01 : - attempted to add known function for contract for role : ").append(function_));
+            require(!isKnownFunctionsByContractByRoleByDapp[_dApp][_role][_contract][function_], string(" Open Roles Admin - addFunctionForRoleForContractForDapp : 01 : - attempted to add known function for contract for role : ").append(function_).append(" : ").append(string(abi.encodePacked(_contract))).append(" : ").append(_role));
             functionsByContractByRoleByDapp[_dApp][_role][_contract].push(function_);
             isKnownFunctionsByContractByRoleByDapp[_dApp][_role][_contract][function_] = true; 
         }
@@ -361,19 +359,18 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin {
 
      // derivative contracts 
 
-        // listing functions 
-    
-    mapping(string=>address[]) derivativeContractsByDapp; 
-    
-    mapping(address=>string) derivativeContractTypeByDerivativeContract; 
+        // listing functions    
     
     mapping(string=>string[]) derivativeContractTypesByDapp; 
+    mapping(string=>mapping(string=>bool)) isKnownDerivativeContractTypeByDapp;     
 
     mapping(string=>mapping(string=>string[])) derivativeContactTypesByRoleByDapp; 
-
     mapping(string=>mapping(string=>string[])) rolesByDerivativeContractTypesByDapp; 
+    mapping(string=>mapping(string=>mapping(string=>bool))) isKnownMappingByContractTypeByRoleByDapp; 
     
-    mapping(string=>mapping(string=>mapping(string=>string[]))) functionsByDerivativeContractTypeByRoleByDapp;  
+
+    mapping(string=>mapping(string=>mapping(string=>string[]))) functionsByDerivativeContractTypeByRoleByDapp;     
+    mapping(string=>mapping(string=>mapping(string=>mapping(string=>bool)))) isKnownFunctionByContractTypeByRoleByDapp;
     
 
      // derivative contracts 
@@ -393,16 +390,13 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin {
 
 
     function listDerivativeContractsForDapp(string memory _dApp) override view external returns(string [] memory _contractTypes, address [] memory _derivativeContracts ){
-        _derivativeContracts = derivativeContractsByDapp[_dApp];
-        _contractTypes = new string[](_derivativeContracts.length);
-        for(uint256 x = 0; x < _derivativeContracts.length; x++) { 
-            _contractTypes[x] = derivativeContractTypeByDerivativeContract[_derivativeContracts[x]];
-        }
-        return ( _contractTypes, _derivativeContracts);
+        _contractTypes = derivativeContractTypesByDapp[_dApp]; 
+        ( _derivativeContracts, _contractTypes) = openRoles.listDerivativeContractAddressesForContractTypeForDapp(_dApp, _contractTypes);
+        return  (_contractTypes, _derivativeContracts);
     }
 
     function listDerivativeContractsForContractType(string memory _dApp, string memory _derivativeContactType) override view external returns (address [] memory _derivativeContracts){
-        require(openRolesLinked, " Open Roles Admin - listDerivativeContractsForContractType : 00 : Open Roles NOT linked.");
+        require(openRolesLinked, string(" Open Roles Admin - listDerivativeContractsForContractType : 00 : Open Roles NOT linked."));
         string [] memory c = new string[](1);
         c[1] = _derivativeContactType; 
         string[] memory contractTypes_;
@@ -420,13 +414,13 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin {
     }
 
     function listDerivativeContractsForRoleForContractType(string memory _dApp,  string memory _role, string memory _derivativeContactType ) override view external returns (address [] memory _derivativeContracts){
-        require(_derivativeContactType.isContained(derivativeContactTypesByRoleByDapp[_dApp][_role]), " Open Roles Admin - listDerivativeContractsForRoleForContractType : 00 : no association for role and contractType ");        
+        require(_derivativeContactType.isContained(derivativeContactTypesByRoleByDapp[_dApp][_role]), string(" Open Roles Admin - listDerivativeContractsForRoleForContractType : 00 : no association for role and contractType ").append(_role));        
         return this.listDerivativeContractsForContractType(_dApp, _derivativeContactType);
     }
 
         // derivative contract listing
     function listRolesForDerivativeContract(address _derivativeContract) override view external returns (string [] memory _roles){
-        require(openRolesLinked, " Open Roles Admin - listRolesForDerivativeContract : 00 : Open Roles NOT linked.");
+        require(openRolesLinked, string(" Open Roles Admin - listRolesForDerivativeContract : 00 : Open Roles NOT linked."));
         string [] memory derivativeContractTypes_ = openRoles.listDerivativeContractTypesForAddress(_derivativeContract);
         string memory dapp_ = openRoles.getDapp(_derivativeContract); 
         _roles = new string[](0);
@@ -439,7 +433,7 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin {
     } 
 
     function listFunctionsForRoleForDerivativeContract(address _derivativeContract, string memory _role) override view external returns (string [] memory _functions){
-        require(openRolesLinked, " Open Roles Admin - listRolesForDerivativeContract : 00 : Open Roles NOT linked.");
+        require(openRolesLinked, string(" Open Roles Admin - listRolesForDerivativeContract : 00 : Open Roles NOT linked."));
         string memory dapp_ = openRoles.getDapp(_derivativeContract); 
         string [] memory derivativeContractTypes_ = openRoles.listDerivativeContractTypesForAddress(_derivativeContract);
         string [] memory roleDerivativeContractTypes_ = derivativeContactTypesByRoleByDapp[dapp_][_role];
@@ -454,7 +448,7 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin {
     }
 
     function listUsersForRoleForDerivativeContract(address _derivativeContract, string memory _role) override view external returns (address [] memory _userAddresses){
-        require(openRolesLinked, " Open Roles Admin - listRolesForDerivativeContract : 00 : Open Roles NOT linked.");
+        require(openRolesLinked, string(" Open Roles Admin - listRolesForDerivativeContract : 00 : Open Roles NOT linked."));
         string memory dapp_ = openRoles.getDapp(_derivativeContract); 
         return this.listUsersForRole(dapp_,_role);
     }
@@ -464,49 +458,130 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin {
 
         // dApp wide 
     function addDerivativeContractTypesForDapp(string memory _dApp, string [] memory _contractTypes) override external returns (bool _added){
-        return ;
+        doSecurity(msg.sender, "addDerivativeContractTypesForDapp");
+
+        for(uint256 x = 0; x < _contractTypes.length; x++){
+            string memory contractType_ = _contractTypes[x];
+            require(!isKnownDerivativeContractTypeByDapp[_dApp][contractType_], string(" Open Roles Admin - addDerivativeContractTypesForDapp : 00 : attempt to add known contract Type :- ").append(contractType_));            
+            derivativeContractTypesByDapp[_dApp].push(contractType_);  
+            isKnownDerivativeContractTypeByDapp[_dApp][contractType_] = true;
+        }
+        return true;
     }
 
     function removeDerivativeContractTypesForDapp(string memory _dApp, string [] memory _contractTypes) override external returns (bool _removed){
-        return ;
+        doSecurity(msg.sender, "removeDerivativeContractTypesForDapp");
+
+        string [] memory contractTypes_ = derivativeContractTypesByDapp[_dApp];
+        string [] memory remainingContractTypes_ = new string[](contractTypes_.length - _contractTypes.length);
+        
+        uint256 y = 0; 
+        for(uint256 x = 0; x < contractTypes_.length; x++){
+            string memory contractType_ = contractTypes_[x];
+            if(contractType_.isContained(contractTypes_)){
+                this.unmapRolesFromContractType(_dApp, contractType_, rolesByDerivativeContractTypesByDapp[_dApp][contractType_]);
+                isKnownDerivativeContractTypeByDapp[_dApp][contractType_] = false; 
+            }
+            else {
+                remainingContractTypes_[y] = contractType_;
+                y++;
+            }            
+        }
+        derivativeContractTypesByDapp[_dApp] = remainingContractTypes_;
+        return true;
     }
 
     // map is used because the values are already known internal to OpenRolesAdmin
-    function mapRolesToContractType(string memory _dApp, string memory _contractType, string [] memory _role) override external returns (bool _added){
-        return ;
+    function mapRolesToContractType(string memory _dApp, string memory _contractType, string [] memory _roles) override external returns (bool _mapped){
+        doSecurity(msg.sender, "mapRolesToContractType");
+
+        require(isKnownDerivativeContractTypeByDapp[_dApp][_contractType], string(" Open Roles Admin - mapRolesToContractType : 00 : attempt to map unknown contract Type : ").append(_contractType));  
+        for(uint256 x = 0; x < _roles.length; x++){
+            string memory role_ = _roles[x];
+            
+            require(isKnownRoleByDapp[_dApp][role_], string(" Open Roles Admin - mapRolesToContractType : 01 : attempt to map unknown role : ").append(role_));
+            require(!isKnownMappingByContractTypeByRoleByDapp[_dApp][role_][_contractType], string(" Open Roles Admin - mapRolesToContractType : 02 : attempt to create known mapping : ").append(role_).append(" : ").append(_contractType));
+
+            rolesByDerivativeContractTypesByDapp[_dApp][_contractType].push(role_);        
+            derivativeContactTypesByRoleByDapp[_dApp][role_].push(_contractType);    
+
+            isKnownMappingByContractTypeByRoleByDapp[_dApp][role_][_contractType] = true;       
+        }
+        return true;
     }
     
-    function unmapRolesFromContractType(string memory _dApp, string memory _contractType, string [] memory _role) override external returns (bool _removed){
-        return ;
+    function unmapRolesFromContractType(string memory _dApp, string memory _contractType, string [] memory _roles) override external returns (bool _unmapped){
+        doSecurity(msg.sender, "unmapRolesFromContractType");
+        
+        for(uint256 x = 0; x < _roles.length; x++){
+            string memory role_ = _roles[x]; 
+            require(isKnownMappingByContractTypeByRoleByDapp[_dApp][role_][_contractType], string(" Open Roles Admin - unmapRolesFromContractType : 02 : attempt to unmap unknown mapping ").append(role_).append(" : ").append(_contractType) );
+
+            // remove reverse mapping
+            rolesByDerivativeContractTypesByDapp[_dApp][_contractType] = role_.remove(rolesByDerivativeContractTypesByDapp[_dApp][_contractType]);
+            // remove forward mapping
+            derivativeContactTypesByRoleByDapp[_dApp][role_] = _contractType.remove(derivativeContactTypesByRoleByDapp[_dApp][role_]);
+            // remove functions
+            this.removeFunctionsForRoleForDerivativeContactType(_dApp, _contractType, role_, functionsByDerivativeContractTypeByRoleByDapp[_dApp][role_][_contractType]);
+            
+            isKnownMappingByContractTypeByRoleByDapp[_dApp][role_][_contractType] = false; 
+        }
+        return true;
     }
 
     function addFunctionsForRoleForDerivativeContactType(string memory _dApp, string memory _contractType, string memory _role, string [] memory _functions) override external returns (bool _added){
-        return ;
+        doSecurity(msg.sender, "addFunctionsForRoleForDerivativeContactType");
+        require(isKnownMappingByContractTypeByRoleByDapp[_dApp][_role][_contractType],"");
+        for(uint256 x = 0; x < _functions.length; x++){
+            string memory function_ = _functions[x];
+            require(!isKnownFunctionByContractTypeByRoleByDapp[_dApp][_role][_contractType][function_], string(" Open Roles Admin - addFunctionsForRoleForDerivativeContactType : 00 : attempt to add existing function to contract type to role : ").append(function_).append(" : ").append(_contractType).append(" : ").append(_role));
+            functionsByDerivativeContractTypeByRoleByDapp[_dApp][_role][_contractType].push(function_);
+            isKnownFunctionByContractTypeByRoleByDapp[_dApp][_role][_contractType][function_] = true; 
+        }
+        return true;
     }
 
     function removeFunctionsForRoleForDerivativeContactType(string memory _dApp, string memory _contractType, string memory _role, string [] memory _functions) override external returns (bool _removed){
-        return ;
+        doSecurity(msg.sender, "removeFunctionsForRoleForDerivativeContactType");
+
+        require(isKnownMappingByContractTypeByRoleByDapp[_dApp][_role][_contractType], string(" Open Roles Admin - addFunctionsForRoleForDerivativeContactType : 00 : attempt to remove functions for unknown mapping : ").append(_contractType).append(" : ").append(_role));
+        for(uint256 x = 0; x < _functions.length; x++){
+            string memory function_ = _functions[x];
+            functionsByDerivativeContractTypeByRoleByDapp[_dApp][_role][_contractType] = function_.remove(functionsByDerivativeContractTypeByRoleByDapp[_dApp][_role][_contractType]);
+            isKnownFunctionByContractTypeByRoleByDapp[_dApp][_role][_contractType][function_] = false; 
+        }
+        return true;
     }
 
     function addValidPass(string memory _pass) external returns (bool _added){ 
         doSecurity(msg.sender, "removeFunctionForRoleForContractForDapp");
-
-
+        passList.push(_pass);
+        passUsageByPass[_pass] = 0; 
+        return true; 
     }
 
     function removePass(string memory _pass) external returns (bool _removed){
         doSecurity(msg.sender, "removeFunctionForRoleForContractForDapp");
-
-
+        require(_pass.isContained(passList), string(" Open Roles Admin - removePass : 00 : attempt to remove unknown pass ").append(_pass));
+        require(passUsageByPass[_pass] == 0, string(" Open Roles Admin - removePass : 01 : attempt to remove used pass ").append(_pass));
+        passList = _pass.remove(passList);
+        delete passUsageByPass[_pass];
+        return true; 
     }
 
-    function doSecurity(address _user, string memory _function) view internal returns (bool _done) {      
+    function doSecurity(address _user, string memory _function) view internal returns (bool _done) {              
         require(_user == rootAdmin, " Open Roles Admin : 00 : - admin only");                
+
         return true; 
     }
 
     function doPassSecurity(address _sender, string memory _function, address _user, string memory _pass) internal returns (bool _done){
+        require(_pass.isContained(passList), string("Open Roles Admin - removePass : 00 : attempt to use unknown pass ").append(_pass));
+        require(passUsageByPass[_pass] == 0, string("Open Roles Admin - removePass : 01 : attempt to use expended pass ").append(_pass)); 
+        /// do some more validation 
 
+        passUsageByPass[_pass] = block.timestamp; 
+        return true; 
     }
 
 }
