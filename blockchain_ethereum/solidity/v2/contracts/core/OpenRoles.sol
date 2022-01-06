@@ -2,16 +2,16 @@
 
 pragma solidity >=0.8.0 <0.9.0;
  /**
-  * @title Open Roles Core - Open Block Enterprise Initiative Role Management contract
+  * 
+  * @title Open Roles Core - Open Block Enterprise Initiative 
   * @author Block Star Logic
   * @dev This is the next iteration of Open Roles. This is the standard implementation that can be deployed into your contract network.  
-  *  
   */
 import "./IOpenRoles.sol";
 
 import "./OpenRolesAdmin.sol"; 
 
-import "./IOpenVersion.sol";
+import "https://github.com/Block-Star-Logic/open-version/blob/3211dff2ed53298e2777f26d58f54dd96551cfea/blockchain_ethereum/solidity/V1/interfaces/IOpenVersion.sol";
 
 contract OpenRoles is IOpenRoles, IOpenVersion { 
 
@@ -99,7 +99,7 @@ contract OpenRoles is IOpenRoles, IOpenVersion {
     }
 
     // admin functions 
-    function listDerivativeContractAddressesForContractTypeForDapp(string memory _dapp, string[] memory _contractType) external returns (address [] memory _derivativeContractAddresses, string [] memory _derivativeContactTypes) {
+    function listDerivativeContractAddressesForContractTypeForDapp(string memory _dapp, string[] memory _contractType) view external returns (address [] memory _derivativeContractAddresses, string [] memory _derivativeContactTypes) {
 
     }
 
