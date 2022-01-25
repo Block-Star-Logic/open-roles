@@ -24,6 +24,13 @@ interface IOpenRolesAdmin {
         // list user addreses assigned to dApp wide role 
     function listUsersForRole(string memory dApp, string memory _role) view external returns (address[] memory _userAddresses);
 
+    // manage derivatives; 
+    function getDerivativeContractsAdmin(string memory _dApp) view external returns (address _derivativeContractAdminAddress);
+
+    function getDerivativeContractTypesAdmin(string memory _dApp) view external returns (address _derivativeContractTypesAdminAddress);
+
+    function getDappForDerivativeContract(address _derivativeContractAddress) view external returns (string memory _dApp);
+
     // entity functions 
 
         // dApp 
@@ -61,52 +68,8 @@ interface IOpenRolesAdmin {
 
     function removeFunctionForRoleForContractForDapp(string memory _dApp, string memory _role, address _contract, string [] memory _functions) external returns (bool _removed);
 
-     
-     // derivative contracts 
+    function addDerivativeContractManagementForDApp(address _derivativeContractAdmin, address _derivativeContractTypesAdmin, string memory _dApp) external returns (bool _added);
 
-        // listing functions 
-    function listDerivativeContractTypesForDapp(string memory dApp) view external returns (string [] memory _contractTypes);
-
-    function listRolesForDerivativeContractType(string memory dApp, string memory _derivativeContactType) view external returns (string [] memory _roles); 
-
-    function listFunctionsForRoleForDerivativeContractType(string memory _dApp, string memory _derivativeContractType, string memory _role) view external returns (string [] memory _functions);
-
-
-    function listDerivativeContractsForDapp(string memory _dApp) view external returns( string [] memory _contractTypes, address [] memory _derivativeContracts); 
-
-    function listDerivativeContractsForContractType(string memory _dApp, string memory _contractType) view external returns (address [] memory _derivativeContracts);
-
-
-    function listDerivativeContractTypesForRole(string memory _dApp, string memory _role) view external returns (string [] memory _contractTypes);
-
-    function listDerivativeContractsForRole(string memory _dApp, string memory _role) view external returns (address [] memory _derivativeContracts, string [] memory _contractTypes);
-
-    function listDerivativeContractsForRoleForContractType(string memory _dApp,  string memory _role, string memory _contractType ) view external returns (address [] memory _derivativeContracts);
-
-        // derivative contract listing
-    function listRolesForDerivativeContract(address _derivativeContract) view external returns (string [] memory _roles); 
-
-    function listFunctionsForRoleForDerivativeContract(address _derivativeContract, string memory _role) view external returns (string [] memory _functions);
-
-    function listUsersForRoleForDerivativeContract(address _derivativeContract, string memory _role) view external returns (address [] memory _userAddresses);
-
-    
-    // derivative contacts - derivative contracts can only be "owned" by one dApp but can be shared to other dApp contexts
-
-        // dApp wide 
-    function addDerivativeContractTypesForDapp(string memory _dApp, string [] memory _contractTypes) external returns (bool _added);
-
-    function removeDerivativeContractTypesForDapp(string memory _dApp, string [] memory _contractTypes) external returns (bool _removed);
-
-    // map is used because the values are already known internal to OpenRolesAdmin
-    function mapRolesToContractType(string memory _dApp, string memory _contractType, string [] memory _role) external returns (bool _added);
-    
-    function unmapRolesFromContractType(string memory _dApp, string memory _contractType, string [] memory _role) external returns (bool _removed);
-
-
-    function addFunctionsForRoleForDerivativeContactType(string memory _dApp, string memory _contractType, string memory _role, string [] memory _functions) external returns (bool _added);
-
-    function removeFunctionsForRoleForDerivativeContactType(string memory _dApp, string memory _contractType, string memory _role, string [] memory _functions) external returns (bool _removed);
-
-
+    function removeDerivativeContractManagementForDApp(string memory _dApp) external returns (bool _removed);
+         
 }
