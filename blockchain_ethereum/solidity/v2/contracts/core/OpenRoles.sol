@@ -11,15 +11,15 @@ import "https://github.com/Block-Star-Logic/open-version/blob/main/blockchain_et
 
 import "https://github.com/Block-Star-Logic/open-libraries/blob/main/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
 
-import "../interfaces/IOpenRolesAdmin.sol";
+import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesAdmin.sol";
 
-import "../interfaces/IOpenRolesAdminInternal.sol"; 
+import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesAdminInternal.sol"; 
 
-import "../interfaces/IOpenRolesDerivativesAdmin.sol";
+import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesDerivativeAdmin.sol";
 
-import "../interfaces/IOpenRolesDerivativeTypesAdmin.sol";
+import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesDerivativeTypesAdmin.sol";
 
-import "../interfaces/IOpenRoles.sol";
+import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRoles.sol";
 
 
 contract OpenRoles is IOpenRoles, IOpenVersion { 
@@ -69,7 +69,7 @@ contract OpenRoles is IOpenRoles, IOpenVersion {
         return admin.getDerivativeContractsAdmin(_dApp); 
     }
 
-    // ===========================================================
+    // ==================================== INTERNAL =======================
 
     function isOnList(address _contract, string memory _role, string memory _function, address _srcSender, bool barring) view internal returns (bool _isOnList) {
         string memory dApp_ = admin.getDappForDerivativeContract(_contract); 

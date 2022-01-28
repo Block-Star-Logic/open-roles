@@ -2,44 +2,83 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
-import "../interfaces/IOpenRoles.sol";
-import "../interfaces/IOpenRolesDerivativesAdmin.sol";
+import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRoles.sol";
+
+import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesDerivativeAdmin.sol";
 
 import "./TestORDerivative.sol";
 
-contract TestORCore { 
+import "../interfaces/IOpenRolesManaged.sol";
+
+contract TestORCore is IOpenRolesManaged { 
 
     
     address self; 
     IOpenRoles or; 
     string dApp = "TEST_DAPP"; 
-    string role = "TEST_CORE_DAPP_USER";
+    
+    string role = "TEST_CORE_CONTRACT_ROLE";
     string admin = "TEST_ADMIN_ROLE"; 
+    
     string derivativeContractType = "TEST_DERIVATIVE_CONTRACT_TYPE";
+    
     address derivativeTest; 
     bool derivativeTestCreated;
 
-    constructor(address _openRoles) {
-       
+    string name = "TEST_OR_CORE"; 
+    uint256 version = 1; 
+
+    // Open Roles Managed
+    string [] roleNames; 
+    mapping(string=>bool) hasDefaultFunctionsByRole; 
+    mapping(string=>string[]) defaultFunctionsByRole; 
+
+    constructor(address _openRoles) {       
         or = IOpenRoles(_openRoles);        
-        self = address(this);
-        
+        self = address(this);  
+        initDefaultRoleConfiguration();       
     }
     
+    function getName() override view external returns(string memory _name) {
+        return name; 
+    }
+
+    function getVersion () override view external returns (uint256 _version) { 
+        return version; 
+    }
+
+    function getDefaultRoles() override view external returns (string [] memory _roleNames){
+        return roleNames; 
+    }
+
+    function hasDefaultFunctions(string memory _role) override view external returns(bool _hasFunctions){
+        return hasDefaultFunctionsByRole[_role];
+    } 
+
+    function getDefaultFunctions(string memory _role) override view external returns (string [] memory _functions){
+        return defaultFunctionsByRole[_role];
+    }
+
     function testAllowUser() view external returns (bool _userAllowed){
-        return or.isAllowed(dApp,  role, self, "testAllowUser", msg.sender ); // user on llist
+        return or.isAllowed(dApp,  role, self, "testAllowUser", msg.sender ); // user on list
     }
 
-    function testDoNotAllowUser() view external returns (bool _userNOTAllowed){
-        return !or.isAllowed(dApp, role, self, "testDoNotAllowUser", msg.sender);
+    function testDoNotAllowUser() view external returns (bool _userNOTAllowed){ // user not on list FALSE == FAIL 
+        if(!or.isAllowed(dApp, role, self, "testDoNotAllowUser", msg.sender)){
+            return true; 
+        }
+        return false; 
     }
 
-    function testBarUser() view external returns (bool _userBarred){
+    function testBarUser() view external returns (bool _userBarred){ // user on list
         return or.isBarred(dApp, role, self, "testBarUser", msg.sender);
     }
 
-    function testDoNotBarUser() view external returns (bool _userNOTBarred){
-        return !or.isBarred(dApp,  role, self, "testDoNotBarUser", msg.sender);
+    function testDoNotBarUser() view external returns (bool _userNOTBarred){ // user not on list FALSE == FAIL 
+        if(!or.isBarred(dApp,  role, self, "testDoNotBarUser", msg.sender)) {
+            return true; 
+        }
+        return false;
     }
 
     function createDerivativeContractTest() external returns (address _derivativeContractTest){
@@ -57,18 +96,16 @@ contract TestORCore {
         return true; 
     }
 
-
     function getDerivativeContractTest() view external returns (address _d) {  
         return derivativeTest;
     }
-
 
     function configureDerivativeContract(address _derivativeContract) internal returns (bool _configured) {
         IOpenRolesDerivativesAdmin iorda = IOpenRolesDerivativesAdmin(or.getDerivativeContractsAdmin(dApp));
         iorda.addDerivativeContract(derivativeTest, derivativeContractType);
         
         string [] memory roles_ = new string[](3);
-        roles_[0] = "TEST_ROLE";
+        roles_[0] = "TEST_DERIVATIVE_CONTRACT_ROLE";
         
         iorda.addRolesForDerivativeContract(_derivativeContract, roles_);
 
@@ -88,6 +125,27 @@ contract TestORCore {
         // all other users configured in Types Admin
 
         return true; 
+    }
+
+    function initDefaultRoleConfiguration() internal returns (bool _configured){
+        roleNames = new string[](2);
+        roleNames[0] = admin;
+        roleNames[1] = role;
+
+       string [] memory adminFunctions = new string[](1);
+       adminFunctions[0] = "setOpenRoles";
+  
+       defaultFunctionsByRole[admin] = adminFunctions;
+       hasDefaultFunctionsByRole[admin] = true; 
+
+       string [] memory roleFunctions = new string[](2);
+       roleFunctions[0] = "testAllowUser";
+       roleFunctions[1] = "testBarUser";
+   
+       defaultFunctionsByRole[role] = roleFunctions; 
+       hasDefaultFunctionsByRole[role] = true; 
+
+       return true; 
     }
 
 
