@@ -2,7 +2,7 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
-import "../openblock/LOpenUtilities.sol";
+import "https://github.com/Block-Star-Logic/open-libraries/blob/16a705a5421984ca94dc72fff100cb406ac9aa96/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
 
 import "https://github.com/Block-Star-Logic/open-version/blob/main/blockchain_ethereum/solidity/V1/interfaces/IOpenVersion.sol";
 
@@ -12,7 +12,7 @@ import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800
 
 import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesDerivativeAdmin.sol";
 
-import "../interfaces/IOpenRolesManaged.sol";
+import "https://github.com/Block-Star-Logic/open-roles/blob/0a51eca36826b9d7293b631b6542d73ef0875907/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesManaged.sol";
 
 
 contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInternal {

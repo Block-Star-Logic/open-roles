@@ -8,7 +8,7 @@ import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800
 
 import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRoles.sol";
 
-import "../interfaces/IOpenRolesManaged.sol"; 
+import "https://github.com/Block-Star-Logic/open-roles/blob/0a51eca36826b9d7293b631b6542d73ef0875907/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesManaged.sol"; 
 
 contract OpenRolesDerivativesAdmin is IOpenRolesManaged, IOpenRolesDerivativesAdmin { 
 
