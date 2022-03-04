@@ -8,7 +8,7 @@ import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800
 
 import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRoles.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/0a51eca36826b9d7293b631b6542d73ef0875907/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesManaged.sol"; 
+import "../interfaces/IOpenRolesManaged.sol"; 
 
 contract OpenRolesDerivativesAdmin is IOpenRolesManaged, IOpenRolesDerivativesAdmin { 
 
@@ -281,6 +281,21 @@ contract OpenRolesDerivativesAdmin is IOpenRolesManaged, IOpenRolesDerivativesAd
         require(ior.isAllowed(dApp, sysAdminRole, self, "setOpenRoles", msg.sender)," Open Roles Derivative Admin : setOpenRoles : 00 : authorised roles only ");
         ior = IOpenRoles(_openRolesAddress); 
         return true; 
+    }
+
+    function hasDefaultAsUserDappRoles() override  pure external returns (bool _hasDefaultDappRoles){
+        return false; 
+    }
+
+    /**
+     * @dev these are the default role lists to which to add this component when adding it to Open Roles Admin
+     */
+    function getDefaultAsUserDappRoles() override pure external returns (string [] memory _defaultDappRoles) { 
+        return new string[](0);
+    }
+
+    function hasDerivativeTypeConfiguration() override pure external returns (bool _hasDerivativeTypeConfiguration){
+        return false; 
     }
 
 // =================================

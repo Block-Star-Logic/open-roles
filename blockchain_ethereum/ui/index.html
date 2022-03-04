@@ -1,0 +1,1590 @@
+<!--
+
+=========================================================
+* Now UI Dashboard - v1.5.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/now-ui-dashboard
+* Copyright 2019 Creative Tim (http://www.creative-tim.com)
+
+* Designed by www.invisionapp.com Coded by www.creative-tim.com
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        Open Roles Admin Dashboard
+    </title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <!-- CSS Files -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet" />
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link href="assets/demo/demo.css" rel="stylesheet" />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js" type="text/javascript"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/ethjs@0.3.4/dist/ethjs.min.js"></script>
+</head>
+
+<body class="">
+    <div class="wrapper ">
+        <div class="sidebar" data-color="orange">
+            <!--
+        Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow"
+    -->
+            <div class="logo">
+                <a href="http://www.blockstarlogic/obei" class="simple-text logo-mini">
+          OR
+        </a>
+                <a href="http://www.blockstarlogic/open-roles" class="simple-text logo-normal">
+          Open Roles Console
+        </a>
+            </div>
+            <div class="sidebar-wrapper" id="sidebar-wrapper">
+                <ul class="nav">
+                    <li>
+                        <a href="./index.html">
+                            <i class="now-ui-icons design_app"></i>
+                            <p>Open Roles Admin</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./derivative_types_admin.html">
+                            <i class="now-ui-icons education_atom"></i>
+                            <p>Derivative Types Admin</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./derivative_contracts_admin.html">
+                            <i class="now-ui-icons location_map-big"></i>
+                            <p>Derivative Contracts Admin</p>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="main-panel" id="main-panel">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-transparent  bg-primary  navbar-absolute">
+                <div class="container-fluid">
+                    <div class="navbar-wrapper">
+                        <div class="navbar-toggle">
+                            <button type="button" class="navbar-toggler">
+                                <span class="navbar-toggler-bar bar1"></span>
+                                <span class="navbar-toggler-bar bar2"></span>
+                                <span class="navbar-toggler-bar bar3"></span>
+                            </button>
+                        </div>
+                        
+                    </div>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+          </button>
+                    <div class="collapse navbar-collapse justify-content-end" id="navigation">
+                        <form>
+                            <div class="input-group no-border">
+                                <input type="button" id="connect_web_3" value="Connect Web 3" class="btn-light" />                            
+                            </div>
+                            <span id="show_wallet"></span>
+                        </form>
+                        <ul class="navbar-nav">
+                            
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- End Navbar -->
+            <div class="panel-header panel-header-sm">
+            </div>
+            <div class="content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <span id="show wallet"></span>
+                                <h4 class="card-title">Open Roles Admin</h4>
+                                <table> 
+                                  <tr>
+                                    <td>Open Roles Admin Contract Address :: </td>
+                                    <td><input type="text" id="address_open_roles_admin" placeholder="enter open roles address" class="form-control"/></td>
+                                    <td><input type="button" id="button_connect_open_roles_admin" value="connect" class="btn-info"/></td>
+                                  </tr>
+                                </table>                                   
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table" id="open_roles_data">
+                                        <thead class=" text-primary">
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><label>Version</label></td>
+                                                <td><span id="ora_version"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><label>Name</label></td>
+                                                <td><span id="ora_name"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><label>Root</label></td>
+                                                <td><span id="ora_root_admin"></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <h4>Dapps</h4>
+                                <div class="table-responsive">
+                                  <table id="dapp_list">
+                                    <tr>
+                                        <th>Dapp</th>
+                                        <th>Has Derivative Contracts</th>
+                                        <th>Dereivative Types Admin</th>
+                                        <th>Dereivative Contracts Admin</th>
+                                    </tr>
+                  
+                                </table>
+        
+                                </div>
+                                <h2>Roles for Dapp </h2>
+                                <div class="table-responsive">
+                                  <table id="roles_for_dapp_table">
+                                    <tr>
+                                        <th>Dapp</th>
+                                        <th>Role</th>
+                                    </tr>
+                            
+                                  </table>
+                                </div>
+
+                                <h2>Contracts for DApp</h2>
+                                <div class="table-responsive">
+                                <table id="contracts_for_dapp_table">
+                                    <tr>
+                                        <th>Dapp</th>
+                                        <th>Contract Name</th>
+                                        <th>Contract Address</th>
+                                    </tr>
+                              
+                                </table>
+                                </div>
+                                <h4>Search</h4>
+                                <div class="table-responsive"> 
+                                  <table id="search_table"> 
+                                    <tr> 
+                                      <td>Find Contracts For Role For Dapp</td>
+                                      <td><input id="dapp_name_search_contracts_for_role_for_dapp" type="text" placeholder="enter dapp ..." class="form-control"/></td>
+                                      <td><input id="role_name_search_contracts_for_role_for_dapp" type="text" placeholder="enter role ..."  class="form-control"/></td>
+                                      <td><button id="button_search_contracts_for_role_for_dapp" class="btn-info">Search</button></td>
+                                    </tr>
+                                    <tr> 
+                                      <td>Find Functions for Contract For Role For Dapp</td>
+                                      <td><input id="dapp_search_functions_for_contract_for_role_for_dapp" type="text" placeholder="enter dapp ..." class="form-control"/></td>
+                                      <td><input id="role_search_functions_for_contract_for_role_for_dapp" type="text" placeholder="enter role ..." class="form-control"/></td>
+                                      <td><input id="contract_search_functions_for_contract_for_role_for_dapp" type="text" placeholder="enter Contract 0x ..." class="form-control"/></td>
+                                      <td><button id="button_search_functions_for_contract_for_role_for_dapp"value="search" class="btn-info">Search</button></td>
+                                    </tr>
+                                    <tr> 
+                                      <td>Find Users For Role For Dapp</td>
+                                      <td><input id="dapp_name_search_users_for_role_for_dapp" type="text" placeholder="enter dapp ..." class="form-control"/></td>
+                                      <td><input id="role_name_search_users_for_role_for_dapp" type="text" placeholder="enter role ..." class="form-control"/></td>
+                                      <td><button id="button_search_users_for_role_for_dapp" value="search" class="btn-info">Search</button></td>
+                                    </tr>
+                                  </table>
+
+
+                                </div>
+                                <h2>Results</h2>
+                                <div class="table-responsive">
+                                    <table id="results_table"> 
+
+
+                                    </table>                                  
+                                </div>
+
+                                <div class="table-responsive"> 
+                                  <h2> Update Role Manager</h2>
+                                  <table>
+                                      <tr>
+                                          <td>Add DApp </td>
+                                          <td><input id="dapp_name_add" type="text" placeholder="enter Dapp name..."  class="form-control"/></td>
+                                          <td><button id="button_add_dapp" type="submit" value="add" class="btn-success">add</button></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                      </tr>
+                                      <tr>
+                                          <td>Remove DApp </td>
+                                          <td><input id="dapp_name_remove_dapp" type="text" placeholder="enter Dapp name..."  class="form-control"/> </td>
+                                          <td><button id="button_remove_dapp" type="submit" class="btn-primary" >remove</button></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                            <label>Add Derivative Contract Management for DApp</label>                                            
+                                        </td>
+                                        <td>
+                                            <input id="dapp_name_derivative_contract_management" type="text" placeholder="enter Dapp name..." class="form-control" />
+                                        </td>
+                                        <td><label>Add Derivative Contract Types Admin</label></td>
+                                        <td><input id="address_add_derivative_contract_types_admin" type="text" placeholder="enter Derivative Contract Type Admin address ..." class="form-control" /></td>
+                                        <td><label>Add Derivative Contract Admin</label></td>
+                                        <td><input id="address_add_derivative_contract_admin_address" type="text" placeholder="enter Derivative Contract Admin address ..." class="form-control" /></td>
+                                        <td><button type="submit" id="add_derivative_contract_management"  class="btn-success">Add Derivative Contract Management</button></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                      </tr>
+                                      <tr>
+                                       
+                                        <td><label>Remove Derivative Contract Management Dapp</label></td>
+                                        <td><input id="dapp_name_remove_derivative_contract_management" type="text" placeholder="enter Dapp name..." class="form-control" /></td>
+                                        <td><button id="button_remove_derivative_contract_management" type="submit" class="btn-primary">Remove Derivative Contract Management</button></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>                                        
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                          <td>
+                                              <label>Add Roles for DApp</label>                                              
+                                          </td>
+                                          <td>
+                                            <input id="dapp_name_add_roles_for_dapp" type="text" placeholder="enter Dapp name..." class="form-control" />                                              
+                                          </td>                                          
+                                          <td><label>Roles for Dapp</label></td>
+                                          <td><textarea id="role_names_add_roles_for_dapp" placeholder="enter comma separated role names" class="form-control" ></textarea></td>
+                                          <td><button id="button_add_roles_For_dapp" type="submit" value="add"  class="btn-success"></button></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                      </tr>
+                                      <tr>
+                                          <td>
+                                              <label>Remove Roles For Dapp</label>                                              
+                                          </td>
+                                          <td><input id="" type="text" placeholder="enter Dapp name..." class="form-control" /></td>
+                                          <td>
+                                              <label>Remove Roles for Dapp</label>                                              
+                                          </td>
+                                          <td><textarea id="" placeholder="enter comma separated role names" class="form-control" ></textarea></td>
+                                          <td><button id="" type="submit" value="remove" class="btn-primary"></button></td>                                                                                    
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                          <td></td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                            <label>Add Contracts for Dapp</label>                                            
+                                        </td>
+                                        <td><input id="" type="text" placeholder="enter Dapp name..." class="form-control" /></td>
+                                        <td><label>Contracts for Dapp</label></td>
+                                        <td><textarea id="" placeholder="enter comma separated contract addresses" class="form-control" ></textarea></td>
+                                        <td><label>Names for Contracts</label></td>
+                                        <td>
+                                            <textarea id="" placeholder="enter comma separated contrac names" class="form-control" ></textarea>
+                                        </td>
+                                        <td><button id="" type="submit" value="add"  class="btn-success"></button></td>                                        
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                          <label>Remove Contracts for Dapp</label>                                          
+                                      </td>
+                                      <td><input id="" type="text" placeholder="enter Dapp name..." class="form-control" /></td>
+                                      <td>
+                                          <label>Remove Contracts for Dapp</label>                                          
+                                      </td>
+                                      <td><textarea id="" placeholder="enter comma separated contract addresses" class="form-control" ></textarea></td>
+                                      <td><button id="" type="submit" value="remove" class="btn-primary"></button></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                          <label>Add Managed Contracts For DApp</label>                                          
+                                      </td>
+                                      <td><input id="" type="text" placeholder="enter Dapp name..." class="form-control" /></td>
+                                      <td>
+                                          <label>Managed Contracts addreses</label>                                          
+                                      </td>
+                                      <td><textarea id="" placeholder="enter comma separated contract addresses" class="form-control" ></textarea></td>
+                                      <td><button id="" type="submit" value="add"  class="btn-success"></button></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                    </tr>
+                                    <tr>
+                                      <td><label>Add Users for Role for DApp</label></td>
+                                      <td><input id="" type="text" placeholder="enter Dapp name..." class="form-control" /></td>
+                                      <td><label>Role</label></td>
+                                      <td>                                          
+                                          <input id="" type="text" placeholder="enter Role name..." class="form-control" />
+                                      </td>
+                                      <td><label>Add User Addresses for Role for Dapp</label></td>
+                                      <td>                                         
+                                          <textarea id="" placeholder="enter comma separated user addresses" class="form-control" ></textarea>
+                                      </td>
+                                      <td><button id="" type="submit" value="add"  class="btn-success">add</button></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                    </tr>
+                                    <tr>
+                                      <td><label>Remove Users for Role for DApp</label></td>
+                                      <td><input id="" type="text" placeholder="enter Dapp name..." class="form-control" /></td>
+                                      <td><label>Role</label></td>
+                                      <td>
+                                          <input id="" type="text" placeholder="enter Role name..." class="form-control" />
+                                      </td>
+                                      <td><label>Remove User Addresses for Role for Dapp</label></td>
+                                      <td>
+                                          <textarea id="" placeholder="enter comma separated user addresses" class="form-control" ></textarea>
+                                      </td>
+                                      <td><button id="" type="submit" value="remove" class="btn-primary" >remove</button></td>                                      
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                    </tr>
+                                    <tr>
+                                      <td><label>Add Functions for Role for Contract for DApp</label></td>
+                                      <td><input id="" type="text" placeholder="enter Dapp name..." class="form-control" /></td>
+                                      <td><label>Role</label></td>
+                                      <td><input id="" type="text" placeholder="enter Role name..." class="form-control" /></td>
+                                      <td><label>Contract</label></td>
+                                      <td>                                         
+                                          <input id="" type="text" placeholder="enter Contract address..." class="form-control" />
+                                      </td>
+                                      <td><label>Add Functions for Contract for Role for Dapp</label></td>
+                                      <td>                                          
+                                          <textarea id="" placeholder="enter comma separated function names" class="form-control" ></textarea>
+                                      </td>
+                                      <td><button id="" type="submit" value="add"  class="btn-success"></button></td>                                      
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                    </tr>
+                                    <tr>
+                                      <td><label>Remove Functions for Role for Contract for DApp</label></td>
+                                      <td><input id="" type="text" placeholder="enter Dapp name..." class="form-control" /></td>
+                                      <td><label>Role</label></td>
+                                      <td><input id="" type="text" placeholder="enter Role name..." class="form-control" /></td>
+                                      <td><label>Contract</label></td>
+                                      <td>                                          
+                                          <input id="" type="text" placeholder="enter Contract address..." class="form-control" />
+                                      </td>
+                                      <td><label>Remove Functions for Contract for Role for Dapp</label></td>
+                                      <td>                                         
+                                          <textarea id="" placeholder="enter comma separated function names" class="form-control" ></textarea>
+                                      </td>
+                                      <td><button id="" type="submit" value="remove" class="btn-primary"></button></td>                                      
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
+                                    </tr>
+
+                                  </table>
+
+                                </div>
+
+                             
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <footer class="footer">
+                <div class=" container-fluid ">
+                    <nav>
+                        <ul>
+                            <li>
+                                <a href="https://www.blockstarlogic.com/obei">
+                  Open Block EI
+                </a>
+                            </li>
+                            <li>
+                                <a href="http://www.blockstarlogic.com">
+                  About Us
+                </a>
+                            </li>
+              
+                        </ul>
+                    </nav>
+                    <div class="copyright" id="copyright">
+                        &copy;
+                        <script>
+                            document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
+                        </script>, Designed by <a href="https://www.invisionapp.com" target="_blank">Invision</a>. Coded by <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a>.
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <!--   Core JS Files   -->
+    <script src="assets/js/core/jquery.min.js"></script>
+    <script src="assets/js/core/popper.min.js"></script>
+    <script src="assets/js/core/bootstrap.min.js"></script>
+    <script src="assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+    <!--  Google Maps Plugin    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+    <!-- Chart JS -->
+    <script src="assets/js/plugins/chartjs.min.js"></script>
+    <!--  Notifications Plugin    -->
+    <script src="assets/js/plugins/bootstrap-notify.js"></script>
+    <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="assets/js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
+    <!-- Now Ui Dashboard DEMO methods, don't include it in your project! -->
+    <script src="assets/demo/demo.js"></script>
+
+    <script>
+const openRolesAdminAbi = [
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_rootAdmin",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_contracts",
+				"type": "address[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_contractNames",
+				"type": "string[]"
+			}
+		],
+		"name": "addContractsForDapp",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_added",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_role",
+				"type": "string"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_contracts",
+				"type": "address[]"
+			}
+		],
+		"name": "addContractsForRoleForDapp",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_added",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			}
+		],
+		"name": "addDapp",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_added",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_derivativeContractAdmin",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_derivativeContractTypesAdmin",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			}
+		],
+		"name": "addDerivativeContractManagementForDApp",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_added",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_role",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "_contract",
+				"type": "address"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_functions",
+				"type": "string[]"
+			}
+		],
+		"name": "addFunctionForRoleForContractForDapp",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_added",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_contracts",
+				"type": "address[]"
+			}
+		],
+		"name": "addManagedContractsForDapp",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_added",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_roleNames",
+				"type": "string[]"
+			}
+		],
+		"name": "addRolesForDapp",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_added",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_role",
+				"type": "string"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_userAddresses",
+				"type": "address[]"
+			}
+		],
+		"name": "addUserAddressesForRoleForDapp",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_added",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_contract",
+				"type": "address"
+			}
+		],
+		"name": "getDappForDerivativeContract",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			}
+		],
+		"name": "getDerivativeContractTypesAdmin",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "_derivativeContractTypesAdminAddress",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			}
+		],
+		"name": "getDerivativeContractsAdmin",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "_derivativeContractAdminAddress",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getName",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "_contractName",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getVersion",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "_version",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			}
+		],
+		"name": "isDerivativeContractManagementActive",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_active",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dapp",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_role",
+				"type": "string"
+			}
+		],
+		"name": "isKnownRoleByDappInternal",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_isKnownRoleByDapp",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			}
+		],
+		"name": "listContractsForDapp",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "_contractNames",
+				"type": "string[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_contracts",
+				"type": "address[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_role",
+				"type": "string"
+			}
+		],
+		"name": "listContractsForRoleForDapp",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "_contractNames",
+				"type": "string[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_contractAddresses",
+				"type": "address[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "listDapps",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "_dappList",
+				"type": "string[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_role",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "_contractAddress",
+				"type": "address"
+			}
+		],
+		"name": "listFunctionsForRoleForContractForDapp",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "_functions",
+				"type": "string[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			}
+		],
+		"name": "listRolesForDapp",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "_dappRoleList",
+				"type": "string[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_role",
+				"type": "string"
+			}
+		],
+		"name": "listUsersForRole",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "_userAddresses",
+				"type": "address[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_role",
+				"type": "string"
+			}
+		],
+		"name": "listUsersForRoleInternal",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "_userAddresses",
+				"type": "address[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_contractAddresses",
+				"type": "address[]"
+			}
+		],
+		"name": "removeContractsForDapp",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_removed",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_role",
+				"type": "string"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_contracts",
+				"type": "address[]"
+			}
+		],
+		"name": "removeContractsForRoleForDapp",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_removed",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			}
+		],
+		"name": "removeDapp",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_removed",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			}
+		],
+		"name": "removeDerivativeContractManagementForDApp",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_removed",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_role",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "_contract",
+				"type": "address"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_functions",
+				"type": "string[]"
+			}
+		],
+		"name": "removeFunctionForRoleForContractForDapp",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_removed",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			},
+			{
+				"internalType": "string[]",
+				"name": "_roleNames",
+				"type": "string[]"
+			}
+		],
+		"name": "removeRolesForDapp",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_removed",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_dApp",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_role",
+				"type": "string"
+			},
+			{
+				"internalType": "address[]",
+				"name": "_userAddresses",
+				"type": "address[]"
+			}
+		],
+		"name": "removeUserAddressesForRoleForDapp",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "_removed",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+];
+    
+
+var account;
+
+
+
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const connectOpenRolesAdminButton = document.getElementById("button_connect_open_roles_admin");
+connectOpenRolesAdminButton.setAttribute("onClick", "connectOpenRoles()");
+
+const oraVersion = document.getElementById("ora_version");
+const oraName = document.getElementById("ora_name");
+const oraRootAdmin = document.getElementById("ora_root_admin");
+
+
+
+
+function updateORDetails() { 
+    openRolesAdminContract.methods.getVersion().call({from : account})
+    .then(function(response){
+        oraVersion.innerHTML = response; 
+    });
+    
+    openRolesAdminContract.methods.getName().call({from : account})
+    .then(function(response){
+        oraName.innerHTML = response; 
+    });
+}
+
+
+const dAppList = document.getElementById("dapp_list");
+
+var dAppNames; 
+
+function updateDappList() { 
+    clearTable(dAppList);
+    openRolesAdminContract.methods.listDapps().call({from : account})
+    .then(function(response){
+        console.log(response);
+        
+        dAppNames = response; 
+        for( var x = 0; x < dAppNames.length; x++){
+            var dAppName = dAppNames[x];
+            var row = dAppList.insertRow(); 
+            var dAppCell = row.insertCell(); 
+            dAppCell.appendChild(getText(dAppName));
+
+            var derivativeContractsAdminActiveCell = row.insertCell();
+            var derivativeContractsAdminCell = row.insertCell();
+            var derivativeContractTypesAdminCell = row.insertCell();
+            openRolesAdminContract.methods.isDerivativeContractManagementActive(dAppName).call({from : account})
+            .then(function(response){
+                var active = response; 
+                derivativeContractsAdminActiveCell.appendChild(getText(active));
+
+                if(active == true) {
+                    openRolesAdminContract.methods.getDerivativeContractsAdmin(dAppName).call({from : account})
+                    .then(function(response){
+                        console.log(response);
+                        derivativeContractsAdminCell.appendChild(getText(response));                        
+                    });
+                    openRolesAdminContract.methods.getDerivativeContractsAdmin(dAppName).call({from : account})
+                    .then(function(response){
+                        console.log(response);
+                        derivativeContractTypesAdminCell.appendChild(getText(response));
+                    });
+                }
+            });
+        }
+        updateRolesForDappTable();
+        updateContractsForDappTable();
+
+    });
+}
+
+function clearTable(table_) { 
+    var len = table_.rows.length; 
+    console.log(" rows: " + len);
+    for(var x = 1; x < len; x++){
+        console.log(" row : " + x);
+        table_.deleteRow(1);
+    }  
+}
+
+function clearAllTable(table_) {
+    var len = table_.rows.length; 
+    console.log(" rows: " + len);
+    for(var x = 0; x < len; x++){
+        console.log(" row : " + x);
+        table_.deleteRow(0);
+    }  
+}
+
+function getText(text) {
+    return document.createTextNode(text);
+}
+
+const rolesForDappTable = document.getElementById("roles_for_dapp_table");
+
+function updateRolesForDappTable() { 
+    clearTable(rolesForDappTable);
+    for( var x = 0; x < dAppNames.length; x++){
+        var dAppName = dAppNames[x];
+        openRolesAdminContract.methods.listRolesForDapp(dAppName).call({from : account})
+        .then(function(response){
+            console.log(response);
+            var roles = response;
+            for(var y = 0; y < roles.length; y++){
+              
+                var row = rolesForDappTable.insertRow();
+                var dAppCell = row.insertCell();
+                var roleCell = row.insertCell(); 
+                dAppCell.appendChild(getText(dAppName));
+                roleCell.appendChild(getText(roles[y]));
+            }
+        });
+    }
+}
+
+const contractsForDappTable = document.getElementById("contracts_for_dapp_table");
+
+function updateContractsForDappTable() { 
+    clearTable(contractsForDappTable);
+    for( var x = 0; x < dAppNames.length; x++){
+        var dAppName = dAppNames[x];
+        openRolesAdminContract.methods.listContractsForDapp(dAppName).call({from : account})
+        .then(function(response){
+            console.log(response);
+            var contractNames = response._contractNames;
+            var contracts = response._contracts;
+            for(var y = 0; y < contracts.length; y++){
+                
+                var row = contractsForDappTable.insertRow();
+                var dAppCell = row.insertCell();
+                var contractCell = row.insertCell(); 
+                var contractNameCell = row.insertCell(); 
+                dAppCell.appendChild(getText(dAppName));
+                contractCell.appendChild(getText(contractNames[y]));
+                contractNameCell.appendChild(getText(contracts[y]));
+            }
+        });
+    }
+}
+
+
+const resultsTable = document.getElementById("results_table");
+
+const dappContractsForRoleForDapp = document.getElementById("dapp_name_search_contracts_for_role_for_dapp");
+const roleContractsForRoleForDapp = document.getElementById("role_name_search_contracts_for_role_for_dapp");
+const buttonContractsForRoleForDapp = document.getElementById("button_search_contracts_for_role_for_dapp");
+buttonContractsForRoleForDapp.setAttribute('onClick', 'searchContractsForRoleForDapp()');
+
+function searchContractsForRoleForDapp() { 
+
+    var dAppName = dappContractsForRoleForDapp.value;  
+    var role = roleContractsForRoleForDapp.value; 
+    openRolesAdminContract.methods.listContractsForRoleForDapp(dAppName, role).call({from : account})
+    .then(function(response){
+        clearAllTable(resultsTable);
+        var contractNames = response._contractNames; 
+        var contracts = response.contracts; 
+        for(var x = 0; x < contracts.length; x++){
+            var row = resultsTable.insertRow(); 
+            var dAppCell = row.insertCell(); 
+            var roleCell = row.insertCell(); 
+            var contract = row.insertCell(); 
+            var contractName = row.insertCell(); 
+            dAppCell.appendChild(getText(dappName));
+            roleCell.appendChild(getText(role));
+            contractCell.appendChild(getText(contracts[x]));
+            contractNameCell.appendChild(getText(contractNames[x]));
+        }
+    });
+}
+
+
+const dappFunctionsForContractForRoleForDapp = document.getElementById("dapp_search_functions_for_contract_for_role_for_dapp");
+const roleFunctionsForContractForForRoleForDapp = document.getElementById("role_search_functions_for_contract_for_role_for_dapp");
+const contractFunctionsForContractForRoleForDapp = document.getElementById("contract_search_functions_for_contract_for_role_for_dapp");
+const buttonFunctionsForContractForRoleForDapp= document.getElementById("button_search_functions_for_contract_for_role_for_dapp");
+buttonFunctionsForContractForRoleForDapp.setAttribute("onClick", "searchFunctionsForContractForRoleForDapp()");
+
+function searchFunctionsForContractForRoleForDapp() { 
+
+    var dAppName = dappFunctionsForContractForRoleForDapp.value; 
+    var role = roleFunctionsForContractForForRoleForDapp.value; 
+    var contract = contractFunctionsForContractForRoleForDapp.value; 
+
+    openRolesAdminContract.methods.listFunctionsContractsForRoleForDapp(dAppName, role, contract).call({from : account})
+    .then(function(response){
+        console.log(response);
+        var functions = response._functions; 
+        clearAllTable(resultsTable);
+        for(var x = 0; x < functions.length; x++) {
+            var row = resultsTable.insertRow(); 
+            var dAppCell = row.insertCell(); 
+            var roleCell = row.insertCell(); 
+            var contractCell = row.insertCell(); 
+            var FunctionCell = row.insertCell(); 
+            dAppCell.appendChild(getText(dappName));
+            roleCell.appendChild(getText(role));
+            contractCell.appendChild(getText(contract));
+            functionCell.appendChild(getText(functions[x]));
+        }
+    });    
+}
+
+const dappUsersForRoleForDapp = document.getElementById("dapp_name_search_users_for_role_for_dapp");
+const roleUsersForRoleForDapp = document.getElementById("role_name_search_users_for_role_for_dapp");
+const buttonUsersForRoleForDapp = document.getElementById("button_search_users_for_role_for_dapp");
+buttonUsersForRoleForDapp.setAttribute("onClick", "searchUsersForRoleForDapp()");
+
+function searchUsersForRoleForDapp() {
+    var users = response._users; 
+    var role = roleUsersForRoleForDapp.value;
+    var dAppName = dappUsersForRoleForDapp.value; 
+    clearAllTable(resultsTable);
+    openRolesAdminContract.methods.listContractsForRoleForDapp(dAppName, role).call({from : account})
+    .then(function(response){
+        console.log(response);
+        var users = response._users; 
+        for(var x = 0; x < users.length; x++){            
+            var row = resultsTable.insertRow(); 
+            var dAppCell = row.insertCell(); 
+            var roleCell = row.insertCell(); 
+            var userCell = row.insertCell(); 
+            dAppCell.appendChild(getText(dAppName));
+            roleCell.appendChild(getText(role));   
+            userCell.appendChild(getText(users[x]));   
+        }
+    });
+
+}
+
+
+
+
+
+/*
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+
+
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+
+
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+const openRolesAdminAddress = document.getElementById("address_open_roles_admin");
+*/
+
+const onboardButton = document.getElementById("connect_web_3");
+const showWallet = document.getElementById("show_wallet");
+const web3 = new Web3(window.ethereum);
+
+var openRolesAdminContract;
+var openRolesContract ;
+
+
+//Created check function to see if the MetaMask extension is installed
+const isMetaMaskInstalled = () => {
+
+    const {
+        ethereum
+    } = window;
+    return Boolean(ethereum && ethereum.isMetaMask);
+};
+
+const MetaMaskClientCheck = () => {
+    //Now we check to see if Metmask is installed
+    if (!isMetaMaskInstalled()) {
+        console.log("metamask not installed");
+        //If it isn't installed we ask the user to click to install it
+        onboardButton.innerText = 'Click here to install MetaMask!';
+        //When the button is clicked we call this function
+        onboardButton.onclick = onClickInstall;
+        //The button is now disabled
+        onboardButton.disabled = false;
+    } else {
+        //If it is installed we change our button text
+        onboardButton.innerText = 'Click to Connect Metamask';
+        console.log("metamask installed");
+        onboardButton.addEventListener('click', () => {
+            getAccount();
+            onboardButton.innerText = "Web 3 Connected";
+        });
+    }
+};
+
+const initialize = () => {
+    MetaMaskClientCheck();
+};
+
+
+async function connectOpenRoles() { 
+    oraAddress = openRolesAdminAddress.value;
+    openRolesAdminContract = new web3.eth.Contract(openRolesAdminAbi, oraAddress);
+    updateORDetails();
+    updateDappList(); 
+
+}
+
+window.addEventListener('DOMContentLoaded', initialize);
+
+async function getAccount() {
+    const accounts = await ethereum.request({
+        method: 'eth_requestAccounts'
+    });
+    account = accounts[0];
+    showWallet.innerHTML = "<b>Connected Wallet :: " + account + "</b>";
+    
+}
+
+//We create a new MetaMask onboarding object to use in our app
+//const onboarding = new MetaMaskOnboarding({ forwarderOrigin });
+
+//This will start the onboarding proccess
+const onClickInstall = () => {
+    onboardButton.innerText = 'Onboarding in progress';
+    onboardButton.disabled = true;
+    //On this object we have startOnboarding which will start the onboarding process for our end user
+    onboarding.startOnboarding();
+};
+
+const onClickConnect = async() => {
+    try {
+        // Will open the MetaMask UI
+        // You should disable this button while the request is pending!
+        await ethereum.request({
+            method: 'eth_requestAccounts'
+        });
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+
+    </script> 
+
+</body>
+
+</html>

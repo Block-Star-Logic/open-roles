@@ -2,9 +2,7 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
-import "https://github.com/Block-Star-Logic/open-libraries/blob/16a705a5421984ca94dc72fff100cb406ac9aa96/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
-
-import "https://github.com/Block-Star-Logic/open-version/blob/main/blockchain_ethereum/solidity/V1/interfaces/IOpenVersion.sol";
+import "../openblock/LOpenUtilities.sol";
 
 import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesAdmin.sol";
 
@@ -12,7 +10,11 @@ import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800
 
 import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesDerivativeAdmin.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/0a51eca36826b9d7293b631b6542d73ef0875907/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesManaged.sol";
+import "../interfaces/IOpenRolesDerivativeTypesAdmin.sol";
+
+import "../interfaces/IOpenRolesManaged.sol";
+
+import "../interfaces/IOpenRolesManagedExtended.sol";
 
 
 contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInternal {
@@ -220,13 +222,7 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInterna
         // add users to dApp wide role 
     function addUserAddressesForRoleForDapp(string memory _dApp, string memory _role,address [] memory _userAddresses) override external returns (bool _added){
         doSecurity(msg.sender, "addUserAddressesForRoleForDapp");
-        for(uint256 x = 0; x < _userAddresses.length; x++){
-            address user_ = _userAddresses[x];
-            require(!isKnownUserByRoleByDapp[_dApp][_role][user_], string(" Open Roles Admin : addUserAddressesForRoleForDapp : 00 : - attempted to add known user for role  for dApp : ").append(string(abi.encodePacked(user_))));
-            usersByRoleByDapp[_dApp][_role].push(user_);
-            isKnownUserByRoleByDapp[_dApp][_role][user_] = true; 
-        }
-        return true; 
+        return addUserForRoleForDappInternal(_dApp, _role, _userAddresses);
     }
 
     function removeUserAddressesForRoleForDapp(string memory _dApp, string memory _role,address [] memory _userAddresses) override external returns (bool _removed){
@@ -301,6 +297,21 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInterna
         return true; 
     }
 
+    function addUserForRoleForDappInternal(string memory _dApp, string memory _role,address [] memory _userAddresses) internal returns (bool _added) {
+        for(uint256 x = 0; x < _userAddresses.length; x++){
+            address user_ = _userAddresses[x];
+            addUserForRoleForDappInternal(_dApp, _role, user_);
+        }
+        return true; 
+    }
+
+    function addUserForRoleForDappInternal(string memory _dApp, string memory _role, address  _user) internal returns (bool _added){
+            require(!isKnownUserByRoleByDapp[_dApp][_role][_user], string(" Open Roles Admin : addUserAddressesForRoleForDapp : 00 : - attempted to add known user for role  for dApp : ").append(string(abi.encodePacked(_user))));
+            usersByRoleByDapp[_dApp][_role].push(_user);
+            isKnownUserByRoleByDapp[_dApp][_role][_user] = true; 
+            return true; 
+    }
+
     function addManagedContractsForDappInternal(string memory _dApp, address [] memory _contracts) internal returns (bool _added) {
         string [] memory zero = new string[](0);
         // add zero for managed access         
@@ -325,8 +336,44 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInterna
             
             }
 
+            // add as a user to roles wherever required 
+            if(iorm.hasDefaultAsUserDappRoles()){
+                string [] memory asUserRoles = iorm.getDefaultAsUserDappRoles(); 
+                for(uint256 z = 0; z < asUserRoles.length; z++){
+                    string memory userRole_ = asUserRoles[z];
+                    addUserForRoleForDappInternal(_dApp, userRole_, contract_);
+                }
+            }
+
+            if(iorm.hasDerivativeTypeConfiguration()) {
+                processDerivativeTypeConfiguration(_dApp, contract_);
+               
+            }
+
         }
         return true;
+    }
+
+    function processDerivativeTypeConfiguration (string memory _dApp, address _contract) internal returns (bool) {
+        IOpenRolesDerivativeTypesAdmin iordta = IOpenRolesDerivativeTypesAdmin(derivativeContractTypesAdminAddressByDApp[_dApp]);
+        IOpenRolesManagedExtended iorme = IOpenRolesManagedExtended(_contract);
+        if(iorme.hasDerivativeTypeAffiliation()) {
+
+        }
+        if(iorme.hasDerivativeTypes()) {
+
+        if(iorme.hasDefaultRolesForDerivativeTypes() ) { 
+
+
+        }
+
+        }
+
+
+
+
+
+
     }
 
     function addRolesForDappInternal(string memory _dApp, string [] memory _roleNames) internal returns(bool _added) {
