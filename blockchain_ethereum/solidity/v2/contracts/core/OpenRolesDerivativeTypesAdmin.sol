@@ -13,7 +13,7 @@ import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800
 
 import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRoles.sol";
 
-import "../interfaces/IOpenRolesManaged.sol";
+import "https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesManaged.sol";
 
 
 contract OpenRolesDerivativeTypesAdmin is IOpenRolesManaged, IOpenRolesDerivativeTypesAdmin {
@@ -23,8 +23,8 @@ contract OpenRolesDerivativeTypesAdmin is IOpenRolesManaged, IOpenRolesDerivativ
     using LOpenUtilities for address; 
 
     
-    uint256 version = 6; 
-    string name; 
+    uint256 version = 7; 
+    string name = "RESERVED_OPEN_ROLES_DERIVATIVE_TYPES_ADMIN"; 
     string dApp; 
     IOpenRoles ior; 
     address self; 
@@ -38,8 +38,8 @@ contract OpenRolesDerivativeTypesAdmin is IOpenRolesManaged, IOpenRolesDerivativ
     mapping(string=>bool) hasDefaultFunctionsByRole; 
     mapping(string=>string[]) defaultFunctionsByRole; 
 
-    constructor( string memory _name, string memory _dApp, address _openRolesAdminInternalAddress, address _openRolesAddress) {        
-        name = _name;
+    constructor( string memory _dApp, address _openRolesAdminInternalAddress, address _openRolesAddress) {        
+        
         dApp = _dApp; 
         self = address(this);
         iorai = IOpenRolesAdminInternal(_openRolesAdminInternalAddress);          
@@ -191,21 +191,6 @@ contract OpenRolesDerivativeTypesAdmin is IOpenRolesManaged, IOpenRolesDerivativ
         require(ior.isAllowed(dApp, sysAdminRole, self, "setOpenRoles", msg.sender) ," Open Roles Derivative Types Admin : setOpenRoles : 00 : authorised roles only");
         ior = IOpenRoles(_openRolesAddress); 
         return true; 
-    }
-
-    function hasDefaultAsUserDappRoles() override  pure external returns (bool _hasDefaultDappRoles){
-        return false; 
-    }
-
-    /**
-     * @dev these are the default role lists to which to add this component when adding it to Open Roles Admin
-     */
-    function getDefaultAsUserDappRoles() override pure external returns (string [] memory _defaultDappRoles) { 
-        return new string[](0);
-    }
-
-    function hasDerivativeTypeConfiguration() override pure external returns (bool _hasDerivativeTypeConfiguration){
-        return false; 
     }
 
     //============================================= INTERNAL ==========================================

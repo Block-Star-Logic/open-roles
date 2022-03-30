@@ -28,14 +28,13 @@ contract OpenRoles is IOpenRoles, IOpenVersion {
     using LOpenUtilities for string[];
     using LOpenUtilities for address; 
 
-    uint version = 6;
+    uint version = 7;
 
-    string name; 
+    string name = "RESERVED_OPEN_ROLES"; 
 
     IOpenRolesAdmin admin; 
     
-    constructor(string memory _name, address _openRolesAdminAddress) {
-        name = _name; 
+    constructor(address _openRolesAdminAddress) {        
         admin = IOpenRolesAdmin(_openRolesAdminAddress);
     }
 

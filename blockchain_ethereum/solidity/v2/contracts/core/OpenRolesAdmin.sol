@@ -2,7 +2,7 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
-import "../openblock/LOpenUtilities.sol";
+import "https://github.com/Block-Star-Logic/open-libraries/blob/703b21257790c56a61cd0f3d9de3187a9012e2b3/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
 
 import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesAdmin.sol";
 
@@ -10,11 +10,10 @@ import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800
 
 import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesDerivativeAdmin.sol";
 
-import "../interfaces/IOpenRolesDerivativeTypesAdmin.sol";
+import "https://github.com/Block-Star-Logic/open-roles/blob/48e921db2f31fe4c9afe954399a45d78237e1e70/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesDerivativeTypesAdmin.sol";
 
-import "../interfaces/IOpenRolesManaged.sol";
+import "https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesManaged.sol";
 
-import "../interfaces/IOpenRolesManagedExtended.sol";
 
 
 contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInternal {
@@ -23,8 +22,8 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInterna
     using LOpenUtilities for string[];
     using LOpenUtilities for address; 
 
-    string name; 
-    uint256 version = 8;  
+    string name = "RESERVED_OPEN_ROLES_ADMIN"; 
+    uint256 version = 10;  
 
     address rootAdmin; 
     address self;
@@ -67,8 +66,7 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInterna
     mapping(string=>mapping(string=>address[])) usersByRoleByDapp; 
     mapping(string=>mapping(string=>mapping(address=>bool))) isKnownUserByRoleByDapp; 
 
-    constructor(string memory _name, address _rootAdmin) {
-        name = _name; 
+    constructor( address _rootAdmin) {        
         rootAdmin = _rootAdmin; 
         self = address(this);
     }
@@ -335,46 +333,11 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInterna
                 }
             
             }
-
-            // add as a user to roles wherever required 
-            if(iorm.hasDefaultAsUserDappRoles()){
-                string [] memory asUserRoles = iorm.getDefaultAsUserDappRoles(); 
-                for(uint256 z = 0; z < asUserRoles.length; z++){
-                    string memory userRole_ = asUserRoles[z];
-                    addUserForRoleForDappInternal(_dApp, userRole_, contract_);
-                }
-            }
-
-            if(iorm.hasDerivativeTypeConfiguration()) {
-                processDerivativeTypeConfiguration(_dApp, contract_);
-               
-            }
-
         }
         return true;
     }
 
-    function processDerivativeTypeConfiguration (string memory _dApp, address _contract) internal returns (bool) {
-        IOpenRolesDerivativeTypesAdmin iordta = IOpenRolesDerivativeTypesAdmin(derivativeContractTypesAdminAddressByDApp[_dApp]);
-        IOpenRolesManagedExtended iorme = IOpenRolesManagedExtended(_contract);
-        if(iorme.hasDerivativeTypeAffiliation()) {
-
-        }
-        if(iorme.hasDerivativeTypes()) {
-
-        if(iorme.hasDefaultRolesForDerivativeTypes() ) { 
-
-
-        }
-
-        }
-
-
-
-
-
-
-    }
+ 
 
     function addRolesForDappInternal(string memory _dApp, string [] memory _roleNames) internal returns(bool _added) {
         for(uint256 x = 0; x < _roleNames.length; x++){

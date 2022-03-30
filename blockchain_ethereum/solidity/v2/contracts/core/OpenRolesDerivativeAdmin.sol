@@ -8,7 +8,7 @@ import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800
 
 import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRoles.sol";
 
-import "../interfaces/IOpenRolesManaged.sol"; 
+import "https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesManaged.sol"; 
 
 contract OpenRolesDerivativesAdmin is IOpenRolesManaged, IOpenRolesDerivativesAdmin { 
 
@@ -17,8 +17,8 @@ contract OpenRolesDerivativesAdmin is IOpenRolesManaged, IOpenRolesDerivativesAd
     using LOpenUtilities for address; 
     using LOpenUtilities for address[];
 
-    string name;     
-    uint256 version = 3; 
+    string name = "RESERVED_OPEN_ROLES_DERIVATIVES_ADMIN";     
+    uint256 version = 4; 
     address self; 
 
     string dApp; 
@@ -62,9 +62,8 @@ contract OpenRolesDerivativesAdmin is IOpenRolesManaged, IOpenRolesDerivativesAd
     mapping(address=>mapping(address=>bool)) knownByUserByDerivativeContract; 
 
 
-    constructor(string memory _name, string memory _dApp, address _openRolesAddress ) { 
-        self = address(this);
-        name = _name;         
+    constructor( string memory _dApp, address _openRolesAddress ) { 
+        self = address(this);        
         dApp = _dApp; 
         ior = IOpenRoles(_openRolesAddress); //@todo implement root security protocol    
         initDefaultRoleConfiguration();     
@@ -283,20 +282,6 @@ contract OpenRolesDerivativesAdmin is IOpenRolesManaged, IOpenRolesDerivativesAd
         return true; 
     }
 
-    function hasDefaultAsUserDappRoles() override  pure external returns (bool _hasDefaultDappRoles){
-        return false; 
-    }
-
-    /**
-     * @dev these are the default role lists to which to add this component when adding it to Open Roles Admin
-     */
-    function getDefaultAsUserDappRoles() override pure external returns (string [] memory _defaultDappRoles) { 
-        return new string[](0);
-    }
-
-    function hasDerivativeTypeConfiguration() override pure external returns (bool _hasDerivativeTypeConfiguration){
-        return false; 
-    }
 
 // =================================
 
