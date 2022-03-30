@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: APACHE 2.0
 pragma solidity >=0.8.0 <0.9.0;
 
+import "https://github.com/Block-Star-Logic/open-version/blob/main/blockchain_ethereum/solidity/V1/interfaces/IOpenVersion.sol";
 import "https://github.com/Block-Star-Logic/open-roles/blob/fc410fe170ac2d608ea53e3760c8691e3c5b550e/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRoles.sol";
 import "https://github.com/Block-Star-Logic/open-libraries/blob/16a705a5421984ca94dc72fff100cb406ac9aa96/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
 
@@ -54,15 +55,21 @@ contract OpenRolesSecure {
         return (_names, _addresses, _versions);
     }
 
+    // ============================== INTERNAL ====================
+
     function addConfigurationItem(string memory _name, address _address, uint256 _version) internal returns(bool){
         ConfigurationItem memory item = ConfigurationItem({
-                                                        name : _name,
-                                                        itemAddress : _address,  
-                                                        version : _version 
-                                                    });
+                                                            name : _name,
+                                                            itemAddress : _address,  
+                                                            version : _version 
+                                                        });
         configuration.push(item);
-
         return true; 
+    }
+
+    function addConfigurationItem(address _address) internal returns (bool) {
+        IOpenVersion ov = IOpenVersion(_address);
+        return addConfigurationItem(ov.getName(), _address, ov.getVersion());
     }
 
     function removeConfigurationItem(string memory _name) internal returns (bool _removed) {
@@ -81,5 +88,4 @@ contract OpenRolesSecure {
         configuration = newConfiguration; 
         return true; 
     }
-
 }
