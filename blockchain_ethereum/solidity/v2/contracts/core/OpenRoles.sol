@@ -28,9 +28,9 @@ contract OpenRoles is IOpenRoles, IOpenVersion {
     using LOpenUtilities for string[];
     using LOpenUtilities for address; 
 
-    uint version = 7;
+    uint version = 8;
 
-    string name = "RESERVED_OPEN_ROLES"; 
+    string name = "RESERVED_OPEN_ROLES_CORE"; 
 
     IOpenRolesAdmin admin; 
     
