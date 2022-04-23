@@ -11,36 +11,19 @@ contract OpenRolesSecure {
 
     IOpenRoles roleManager; 
     address self; 
+    bool private roleSecurityActive = true;
+
     struct ConfigurationItem { 
         string name;
         address itemAddress; 
         uint256 version; 
     }
     ConfigurationItem [] configuration;
-
+    mapping(string=>bool) hasConfigurtionItemByName; 
 
     constructor() { 
         self = address(this);
-    }
-    
-    function setRoleManager(address _openRolesAddress) internal returns (bool _set){
-         roleManager = IOpenRoles(_openRolesAddress);
-       
-         return true; 
-    }
-
-    function isSecure(string memory _role, string memory _function) view internal returns (bool) {
-       //return roleManager.isAllowed(self, _role, _function, msg.sender);
-       return true; 
-    }
-        
-    function isSecureBarring(string memory _role, string memory _function) view internal returns (bool) {
-       /*
-       if(roleManager.isBarred(self, _role, _function, msg.sender)){
-           return false; 
-       }*/
-       return true; 
-    }
+    }        
 
     function listConfiguration () view external returns (string [] memory _names, address [] memory _addresses, uint256 [] memory _versions) {
         _names = new string[](configuration.length);
@@ -57,13 +40,39 @@ contract OpenRolesSecure {
 
     // ============================== INTERNAL ====================
 
+    function setRoleManager(address _openRolesAddress) internal returns (bool _set){        
+         roleManager = IOpenRoles(_openRolesAddress);       
+         return true; 
+    }
+
+    function isSecure(string memory _role, string memory _function) view internal returns (bool) {
+        if(roleSecurityActive){
+            return roleManager.isAllowed(self, _role, _function, msg.sender);
+        }
+       return true; 
+    }
+        
+    function isSecureBarring(string memory _role, string memory _function) view internal returns (bool) {       
+       if(roleSecurityActive){
+            if(roleManager.isBarred(self, _role, _function, msg.sender)){
+            return false; 
+            }
+            return true; 
+       }
+       return true; 
+    }
+
     function addConfigurationItem(string memory _name, address _address, uint256 _version) internal returns(bool){
         ConfigurationItem memory item = ConfigurationItem({
                                                             name : _name,
                                                             itemAddress : _address,  
                                                             version : _version 
                                                         });
+        if(hasConfigurtionItemByName[_name]) {
+            removeConfigurationItem(_name);
+        }
         configuration.push(item);
+        hasConfigurtionItemByName[_name] = true; 
         return true; 
     }
 
@@ -86,6 +95,7 @@ contract OpenRolesSecure {
             }
         }
         configuration = newConfiguration; 
+        hasConfigurtionItemByName[_name] = false; 
         return true; 
     }
 }
