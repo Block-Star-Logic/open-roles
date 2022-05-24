@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: APACHE 2.0
 pragma solidity >=0.8.0 <0.9.0;
 
-import "https://github.com/Block-Star-Logic/open-version/blob/main/blockchain_ethereum/solidity/V1/interfaces/IOpenVersion.sol";
+import "https://github.com/Block-Star-Logic/open-version/blob/e161e8a2133fbeae14c45f1c3985c0a60f9a0e54/blockchain_ethereum/solidity/V1/interfaces/IOpenVersion.sol";
 import "https://github.com/Block-Star-Logic/open-roles/blob/fc410fe170ac2d608ea53e3760c8691e3c5b550e/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRoles.sol";
 import "https://github.com/Block-Star-Logic/open-libraries/blob/703b21257790c56a61cd0f3d9de3187a9012e2b3/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
 
@@ -12,6 +12,7 @@ contract OpenRolesSecure {
     IOpenRoles roleManager; 
     address self; 
     bool private roleSecurityActive = true;
+    string dappName;
 
     struct ConfigurationItem { 
         string name;
@@ -21,8 +22,9 @@ contract OpenRolesSecure {
     ConfigurationItem [] configuration;
     mapping(string=>bool) hasConfigurtionItemByName; 
 
-    constructor() { 
+    constructor(string memory _dappName) { 
         self = address(this);
+        dappName = _dappName;
     }        
 
     function listConfiguration () view external returns (string [] memory _names, address [] memory _addresses, uint256 [] memory _versions) {
@@ -47,17 +49,16 @@ contract OpenRolesSecure {
 
     function isSecure(string memory _role, string memory _function) view internal returns (bool) {
         if(roleSecurityActive){
-            return roleManager.isAllowed(self, _role, _function, msg.sender);
+            return roleManager.isAllowed(dappName, _role, self, _function, msg.sender);
         }
        return true; 
     }
         
     function isSecureBarring(string memory _role, string memory _function) view internal returns (bool) {       
        if(roleSecurityActive){
-            if(roleManager.isBarred(self, _role, _function, msg.sender)){
-            return false; 
+            if(roleManager.isBarred(dappName, _role, self, _function, msg.sender)){
+                return false; 
             }
-            return true; 
        }
        return true; 
     }
