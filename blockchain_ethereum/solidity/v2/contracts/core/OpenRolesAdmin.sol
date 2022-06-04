@@ -2,6 +2,8 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
+import "https://github.com/Block-Star-Logic/open-version/blob/e161e8a2133fbeae14c45f1c3985c0a60f9a0e54/blockchain_ethereum/solidity/V1/interfaces/IOpenVersion.sol";
+
 import "https://github.com/Block-Star-Logic/open-libraries/blob/703b21257790c56a61cd0f3d9de3187a9012e2b3/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
 
 import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesAdmin.sol";
@@ -15,7 +17,7 @@ import "https://github.com/Block-Star-Logic/open-roles/blob/48e921db2f31fe4c9afe
 import "https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesManaged.sol";
 
 
-
+ 
 contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInternal {
 
     using LOpenUtilities for string; 
@@ -23,7 +25,7 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInterna
     using LOpenUtilities for address; 
 
     string name = "RESERVED_OPEN_ROLES_ADMIN"; 
-    uint256 version = 10;  
+    uint256 version = 11;  
 
     address rootAdmin; 
     address self;
@@ -285,8 +287,8 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInterna
                     contractNameByContractByDapp[_dApp][contractAddress_] = _contractNames[x];
                 }
                 else { 
-                    IOpenRolesManaged iorm = IOpenRolesManaged(contractAddress_);
-                    contractNameByContractByDapp[_dApp][contractAddress_] = iorm.getName();
+                    IOpenVersion ov_ = IOpenVersion(contractAddress_);
+                    contractNameByContractByDapp[_dApp][contractAddress_] = ov_.getName();
                 }
                 isKnownContractByDapp[_dApp][contractAddress_] = true; 
             }
