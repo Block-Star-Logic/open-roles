@@ -5,13 +5,13 @@ import "https://github.com/Block-Star-Logic/open-version/blob/e161e8a2133fbeae14
 import "https://github.com/Block-Star-Logic/open-roles/blob/fc410fe170ac2d608ea53e3760c8691e3c5b550e/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRoles.sol";
 import "https://github.com/Block-Star-Logic/open-libraries/blob/703b21257790c56a61cd0f3d9de3187a9012e2b3/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
 
-contract OpenRolesSecure { 
+ abstract contract OpenRolesSecure { 
 
     using LOpenUtilities for string; 
 
     IOpenRoles roleManager; 
     address self; 
-    bool private roleSecurityActive = true;
+    bool roleSecurityActive = true;
     string dappName;
 
     struct ConfigurationItem { 
@@ -19,48 +19,37 @@ contract OpenRolesSecure {
         address itemAddress; 
         uint256 version; 
     }
-    ConfigurationItem [] configuration;
-    mapping(string=>bool) hasConfigurtionItemByName; 
+    string [] configurationNames;
+    mapping(string=>bool) hasConfigurationItemByName; 
+    mapping(string=>ConfigurationItem) configurationitemByName; 
 
-    constructor(string memory _dappName) { 
+    constructor() {
         self = address(this);
-        dappName = _dappName;
-    }        
+    }
 
     function listConfiguration () view external returns (string [] memory _names, address [] memory _addresses, uint256 [] memory _versions) {
-        _names = new string[](configuration.length);
-        _addresses = new address[](configuration.length);
-        _versions = new uint256[](configuration.length);
-        for(uint256 x = 0; x < configuration.length; x++){
-            ConfigurationItem memory item = configuration[x];
+        _names = new string[](configurationNames.length);
+        _addresses = new address[](configurationNames.length);
+        _versions = new uint256[](configurationNames.length);
+        for(uint256 x = 0; x < configurationNames.length; x++){
+            string memory _name = configurationNames[x];
+            ConfigurationItem memory item = configurationitemByName[_name];
             _names[x] = item.name; 
             _addresses[x] = item.itemAddress;
             _versions[x] = item.version;
         }
         return (_names, _addresses, _versions);
     }
+   // ============================== INTERNAL ====================
 
-    // ============================== INTERNAL ====================
+    function isSecure(string memory _role, string memory _function) virtual view internal returns (bool); 
+
+    function isSecureBarring(string memory _role, string memory _function) virtual view internal returns (bool);
+
 
     function setRoleManager(address _openRolesAddress) internal returns (bool _set){        
          roleManager = IOpenRoles(_openRolesAddress);       
          return true; 
-    }
-
-    function isSecure(string memory _role, string memory _function) view internal returns (bool) {
-        if(roleSecurityActive){
-            return roleManager.isAllowed(dappName, _role, self, _function, msg.sender);
-        }
-       return true; 
-    }
-        
-    function isSecureBarring(string memory _role, string memory _function) view internal returns (bool) {       
-       if(roleSecurityActive){
-            if(roleManager.isBarred(dappName, _role, self, _function, msg.sender)){
-                return false; 
-            }
-       }
-       return true; 
     }
 
     function addConfigurationItem(string memory _name, address _address, uint256 _version) internal returns(bool){
@@ -69,11 +58,13 @@ contract OpenRolesSecure {
                                                             itemAddress : _address,  
                                                             version : _version 
                                                         });
-        if(hasConfigurtionItemByName[_name]) {
+        if(hasConfigurationItemByName[_name]) {
             removeConfigurationItem(_name);
         }
-        configuration.push(item);
-        hasConfigurtionItemByName[_name] = true; 
+
+        configurationNames.push(item.name);
+        hasConfigurationItemByName[_name] = true; 
+        configurationitemByName[_name] = item;
         return true; 
     }
 
@@ -83,20 +74,9 @@ contract OpenRolesSecure {
     }
 
     function removeConfigurationItem(string memory _name) internal returns (bool _removed) {
-        ConfigurationItem [] memory newConfiguration = new ConfigurationItem[](configuration.length-1);
-        uint256 y = 0; 
-        for(uint256 x = 0; x < configuration.length; x++) {
-            ConfigurationItem memory item = configuration[x];
-            if(!item.name.isEqual(_name)){
-                if(y == newConfiguration.length){ // not found 
-                    return false; 
-                }
-                newConfiguration[y] = item; 
-                y++;
-            }
-        }
-        configuration = newConfiguration; 
-        hasConfigurtionItemByName[_name] = false; 
+        configurationNames = _name.remove(configurationNames);
+        delete hasConfigurationItemByName[_name];
+        delete configurationitemByName[_name];
         return true; 
     }
 }
