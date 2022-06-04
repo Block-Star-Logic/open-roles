@@ -2,8 +2,7 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
-
-
+import "https://github.com/Block-Star-Logic/open-version/blob/e161e8a2133fbeae14c45f1c3985c0a60f9a0e54/blockchain_ethereum/solidity/V1/interfaces/IOpenVersion.sol";
 
 import "https://github.com/Block-Star-Logic/open-libraries/blob/1d31958695b77852fbf1df545b69c3c3ebed8c8a/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
 
@@ -16,14 +15,14 @@ import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800
 import "https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesManaged.sol";
 
 
-contract OpenRolesDerivativeTypesAdmin is IOpenRolesManaged, IOpenRolesDerivativeTypesAdmin {
+contract OpenRolesDerivativeTypesAdmin is IOpenVersion, IOpenRolesManaged, IOpenRolesDerivativeTypesAdmin {
 
     using LOpenUtilities for string; 
     using LOpenUtilities for string[];
     using LOpenUtilities for address; 
 
     
-    uint256 version = 7; 
+    uint256 version = 8; 
     string name = "RESERVED_OPEN_ROLES_DERIVATIVE_TYPES_ADMIN"; 
     string dApp; 
     IOpenRoles ior; 
