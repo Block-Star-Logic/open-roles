@@ -1,18 +1,19 @@
 //SPDX-License-Identifier: Apache-2.0
 
-pragma solidity >=0.8.0 <0.9.0;
+pragma solidity ^0.8.15;
+
 
 import "https://github.com/Block-Star-Logic/open-version/blob/e161e8a2133fbeae14c45f1c3985c0a60f9a0e54/blockchain_ethereum/solidity/V1/interfaces/IOpenVersion.sol";
 
-import "https://github.com/Block-Star-Logic/open-libraries/blob/1d31958695b77852fbf1df545b69c3c3ebed8c8a/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
+import "https://github.com/Block-Star-Logic/open-libraries/blob/703b21257790c56a61cd0f3d9de3187a9012e2b3/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesDerivativeTypesAdmin.sol";
+import "../interfaces/IOpenRolesDerivativeTypesAdmin.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesAdminInternal.sol";
+import "../interfaces/IOpenRolesAdminInternal.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRoles.sol";
+import "../interfaces/IOpenRoles.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesManaged.sol";
+import "../interfaces/IOpenRolesManaged.sol";
 
 
 contract OpenRolesDerivativeTypesAdmin is IOpenVersion, IOpenRolesManaged, IOpenRolesDerivativeTypesAdmin {
@@ -22,7 +23,7 @@ contract OpenRolesDerivativeTypesAdmin is IOpenVersion, IOpenRolesManaged, IOpen
     using LOpenUtilities for address; 
 
     
-    uint256 version = 8; 
+    uint256 version = 11; 
     string name = "RESERVED_OPEN_ROLES_DERIVATIVE_TYPES_ADMIN"; 
     string dApp; 
     IOpenRoles ior; 
@@ -30,10 +31,10 @@ contract OpenRolesDerivativeTypesAdmin is IOpenVersion, IOpenRolesManaged, IOpen
 
     IOpenRolesAdminInternal iorai; 
     
-    string adminRole    = "DERIVATIVE_CONTRACTS_ADMIN_ROLE";
-    string sysAdminRole = "SYS_ADMIN_ROLE";
+    string derivativeContractsAdminRole    = "DERIVATIVE_CONTRACTS_ADMIN_ROLE";
+    string openAdminRole                   = "RESERVED_OPEN_ADMIN_ROLE";
 
-    string [] roleNames; 
+    string [] roleNames = [derivativeContractsAdminRole, openAdminRole]; 
     mapping(string=>bool) hasDefaultFunctionsByRole; 
     mapping(string=>string[]) defaultFunctionsByRole; 
 
@@ -107,7 +108,7 @@ contract OpenRolesDerivativeTypesAdmin is IOpenVersion, IOpenRolesManaged, IOpen
 
         // dApp wide 
     function addDerivativeContractTypes(string [] memory _contractTypes) override external returns (bool _added){
-        require(ior.isAllowed(dApp, adminRole, self, "addDerivativeContractTypes", msg.sender)," Open Roles Derivative Types Admin : addDerivativeContractTypes : 00 : authorised roles only ");       
+        require(ior.isAllowed(dApp, derivativeContractsAdminRole, self, "addDerivativeContractTypes", msg.sender)," Open Roles Derivative Types Admin : addDerivativeContractTypes : 00 : authorised roles only ");       
 
         for(uint256 x = 0; x < _contractTypes.length; x++){
             string memory contractType_ = _contractTypes[x];
@@ -119,14 +120,14 @@ contract OpenRolesDerivativeTypesAdmin is IOpenVersion, IOpenRolesManaged, IOpen
     }
 
     function removeDerivativeContractTypes( string [] memory _contractTypes) override external returns (bool _removed){
-          require(ior.isAllowed(dApp, adminRole, self, "removeDerivativeContractTypes", msg.sender)," Open Roles Derivative Types Admin : removeDerivativeContractTypes : 00 : authorised roles only  ");
+        require(ior.isAllowed(dApp, derivativeContractsAdminRole, self, "removeDerivativeContractTypes", msg.sender)," Open Roles Derivative Types Admin : removeDerivativeContractTypes : 00 : authorised roles only  ");
         
-        string [] memory remainingContractTypes_ = new string[](contractTypes.length - _contractTypes.length);
-        
+        string [] memory remainingContractTypes_ = new string[](contractTypes.length);
+                
         uint256 y = 0; 
-        for(uint256 x = 0; x < _contractTypes.length; x++){
-            string memory contractType_ = _contractTypes[x];
-            if(contractType_.isContained(contractTypes)){
+        for(uint256 x = 0; x < contractTypes.length; x++){
+            string memory contractType_ = contractTypes[x];
+            if(contractType_.isContained(_contractTypes)){
                 unmapRolesFromContractTypeInternal(contractType_, rolesByDerivativeContractType[contractType_]);
                 isKnownDerivativeContractTypeByContractType[contractType_] = false; 
             }
@@ -135,13 +136,18 @@ contract OpenRolesDerivativeTypesAdmin is IOpenVersion, IOpenRolesManaged, IOpen
                 y++;
             }            
         }
-        contractTypes = remainingContractTypes_;
+
+        string [] memory a = new string[](y);
+        for(uint256 z = 0; z < y; z++) {
+            a[z] = remainingContractTypes_[z];
+        }
+        contractTypes = a;
         return true;
     }
 
     // map is used because the values are already known internal to OpenRolesAdmin
     function mapRolesToContractType( string memory _contractType, string [] memory _roles) override external returns (bool _mapped){
-        require(ior.isAllowed(dApp, adminRole, self, "mapRolesToContractType", msg.sender)," Open Roles Derivative Types Admin : mapRolesToContractType : 00 : authorised roles only ");
+        require(ior.isAllowed(dApp, derivativeContractsAdminRole, self, "mapRolesToContractType", msg.sender)," Open Roles Derivative Types Admin : mapRolesToContractType : 00 : authorised roles only ");
 
         require(isKnownDerivativeContractTypeByContractType[_contractType], string(" Open Roles Derivative Types Admin : mapRolesToContractType : 01 : attempt to map unknown contract Type : ").append(_contractType));  
         for(uint256 x = 0; x < _roles.length; x++){
@@ -159,12 +165,12 @@ contract OpenRolesDerivativeTypesAdmin is IOpenVersion, IOpenRolesManaged, IOpen
     }
     
     function unmapRolesFromContractType( string memory _contractType, string [] memory _roles) override external returns (bool _unmapped){
-        require(ior.isAllowed(dApp, adminRole, self, "unmapRolesFromContractType", msg.sender)," Open Roles Derivative Types Admin : unmapRolesFromContractType : 00 : authorised roles only ");   
+        require(ior.isAllowed(dApp, derivativeContractsAdminRole, self, "unmapRolesFromContractType", msg.sender)," Open Roles Derivative Types Admin : unmapRolesFromContractType : 00 : authorised roles only ");   
         return unmapRolesFromContractTypeInternal(_contractType, _roles);
     }
 
     function addFunctionsForRoleForDerivativeContactType( string memory _contractType, string memory _role, string [] memory _functions) override external returns (bool _added){ 
-        require(ior.isAllowed(dApp, adminRole, self, "addFunctionsForRoleForDerivativeContactType", msg.sender), " Open Roles Derivative Types Admin : addFunctionsForRoleForDerivativeContactType : 00 : authorised roles only ");        
+        require(ior.isAllowed(dApp, derivativeContractsAdminRole, self, "addFunctionsForRoleForDerivativeContactType", msg.sender), " Open Roles Derivative Types Admin : addFunctionsForRoleForDerivativeContactType : 00 : authorised roles only ");        
         for(uint256 x = 0; x < _functions.length; x++){
             string memory function_ = _functions[x];
             if(!isKnownFunctionByContractTypeByRole[_role][_contractType][function_]){
@@ -176,18 +182,18 @@ contract OpenRolesDerivativeTypesAdmin is IOpenVersion, IOpenRolesManaged, IOpen
     }
 
     function removeFunctionsForRoleForDerivativeContactType( string memory _contractType, string memory _role, string [] memory _functions) override external returns (bool _removed){
-        require(ior.isAllowed(dApp, adminRole, self, "removeFunctionsForRoleForDerivativeContactType", msg.sender)," Open Roles Derivative Types Admin : removeFunctionsForRoleForDerivativeContactType : 00 : authorised roles only");
+        require(ior.isAllowed(dApp, derivativeContractsAdminRole, self, "removeFunctionsForRoleForDerivativeContactType", msg.sender)," Open Roles Derivative Types Admin : removeFunctionsForRoleForDerivativeContactType : 00 : authorised roles only");
         return removeFunctionsForRoleForDerivativeContactTypeInternal(_contractType, _role, _functions);
     }
 
     function setOpenRolesAdminInternal(address _openRolesAdminInternalAddress) external returns (bool _set){
-        require(ior.isAllowed(dApp, sysAdminRole, self, "setOpenRolesAdminInternal", msg.sender)," Open Roles Derivative Types Admin : setOpenRolesAdminInternal : 00 : authorised roles only");
+        require(ior.isAllowed(dApp, openAdminRole, self, "setOpenRolesAdminInternal", msg.sender)," Open Roles Derivative Types Admin : setOpenRolesAdminInternal : 00 : authorised roles only");
         iorai = IOpenRolesAdminInternal(_openRolesAdminInternalAddress);
         return true;
     }
 
     function setOpenRoles(address _openRolesAddress) external returns (bool _set){
-        require(ior.isAllowed(dApp, sysAdminRole, self, "setOpenRoles", msg.sender) ," Open Roles Derivative Types Admin : setOpenRoles : 00 : authorised roles only");
+        require(ior.isAllowed(dApp, openAdminRole, self, "setOpenRoles", msg.sender) ," Open Roles Derivative Types Admin : setOpenRoles : 00 : authorised roles only");
         ior = IOpenRoles(_openRolesAddress); 
         return true; 
     }
@@ -221,31 +227,20 @@ contract OpenRolesDerivativeTypesAdmin is IOpenVersion, IOpenRolesManaged, IOpen
         return true; 
     }
 
-    function initDefaultRoleConfiguration() internal returns (bool _configured){
-        roleNames = new string[](2);
-        roleNames[0] = sysAdminRole;
-        roleNames[1] = adminRole;
+    function initDefaultRoleConfiguration() internal returns (bool _configured){  
 
-       string [] memory sysAdminFunctions = new string[](2);
-       sysAdminFunctions[0] = "setOpenRolesAdminInternal";
-       sysAdminFunctions[0] = "setOpenRoles";
-
-       defaultFunctionsByRole[sysAdminRole] = sysAdminFunctions;
-       hasDefaultFunctionsByRole[sysAdminRole] = true; 
-
-       string [] memory derivativeAdminFunctions = new string[](6);
-       derivativeAdminFunctions[0] = "addDerivativeContractTypes";
-       derivativeAdminFunctions[1] = "removeDerivativeContractTypes";
-       derivativeAdminFunctions[2] = "mapRolesToContractType";
-       derivativeAdminFunctions[3] = "unmapRolesFromContractType";
-       derivativeAdminFunctions[4] = "addFunctionsForRoleForDerivativeContactType";
-       derivativeAdminFunctions[5] = "removeFunctionsForRoleForDerivativeContactType";
-
+       hasDefaultFunctionsByRole[openAdminRole] = true; 
+       defaultFunctionsByRole[openAdminRole].push("setOpenRolesAdminInternal");
+       defaultFunctionsByRole[openAdminRole].push("setOpenRoles");
+       
+       hasDefaultFunctionsByRole[derivativeContractsAdminRole] = true; 
   
-       defaultFunctionsByRole[adminRole] = derivativeAdminFunctions; 
-
-       hasDefaultFunctionsByRole[adminRole] = true; 
-
+       defaultFunctionsByRole[derivativeContractsAdminRole].push("addDerivativeContractTypes");
+       defaultFunctionsByRole[derivativeContractsAdminRole].push("removeDerivativeContractTypes");
+       defaultFunctionsByRole[derivativeContractsAdminRole].push("mapRolesToContractType");
+       defaultFunctionsByRole[derivativeContractsAdminRole].push("unmapRolesFromContractType");
+       defaultFunctionsByRole[derivativeContractsAdminRole].push("addFunctionsForRoleForDerivativeContactType");
+       defaultFunctionsByRole[derivativeContractsAdminRole].push("removeFunctionsForRoleForDerivativeContactType");
        return true; 
     }
 }

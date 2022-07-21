@@ -1,16 +1,17 @@
 //SPDX-License-Identifier: Apache-2.0
 
-pragma solidity >=0.8.0 <0.9.0;
+pragma solidity ^0.8.15;
+
 
 import "https://github.com/Block-Star-Logic/open-version/blob/e161e8a2133fbeae14c45f1c3985c0a60f9a0e54/blockchain_ethereum/solidity/V1/interfaces/IOpenVersion.sol";
 
-import "https://github.com/Block-Star-Logic/open-libraries/blob/1d31958695b77852fbf1df545b69c3c3ebed8c8a/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
+import "https://github.com/Block-Star-Logic/open-libraries/blob/703b21257790c56a61cd0f3d9de3187a9012e2b3/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
 
 import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesDerivativeAdmin.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRoles.sol";
+import "../interfaces/IOpenRoles.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesManaged.sol"; 
+import "../interfaces/IOpenRolesManaged.sol"; 
 
 contract OpenRolesDerivativesAdmin is IOpenVersion, IOpenRolesManaged, IOpenRolesDerivativesAdmin { 
 
@@ -20,7 +21,7 @@ contract OpenRolesDerivativesAdmin is IOpenVersion, IOpenRolesManaged, IOpenRole
     using LOpenUtilities for address[];
 
     string name = "RESERVED_OPEN_ROLES_DERIVATIVES_ADMIN";     
-    uint256 version = 5; 
+    uint256 version = 6; 
     address self; 
 
     string dApp; 

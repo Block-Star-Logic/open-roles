@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: Apache-2.0
 
-pragma solidity >=0.8.0 <0.9.0;
+pragma solidity ^0.8.15;
 
 import "https://github.com/Block-Star-Logic/open-version/blob/e161e8a2133fbeae14c45f1c3985c0a60f9a0e54/blockchain_ethereum/solidity/V1/interfaces/IOpenVersion.sol";
 

@@ -1,6 +1,7 @@
 //SPDX-License-Identifier: Apache-2.0
 
-pragma solidity >=0.8.0 <0.9.0;
+pragma solidity ^0.8.15;
+
  /**
   * 
   * @title Open Roles Core - Open Block Enterprise Initiative 
@@ -11,15 +12,15 @@ import "https://github.com/Block-Star-Logic/open-version/blob/main/blockchain_et
 
 import "https://github.com/Block-Star-Logic/open-libraries/blob/main/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesAdmin.sol";
+import "../interfaces/IOpenRolesAdmin.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesAdminInternal.sol"; 
+import "../interfaces/IOpenRolesAdminInternal.sol"; 
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesDerivativeAdmin.sol";
+import "../interfaces/IOpenRolesDerivativesAdmin.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesDerivativeTypesAdmin.sol";
+import "../interfaces/IOpenRolesDerivativeTypesAdmin.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRoles.sol";
+import "../interfaces/IOpenRoles.sol";
 
 
 contract OpenRoles is IOpenRoles, IOpenVersion { 
@@ -28,7 +29,7 @@ contract OpenRoles is IOpenRoles, IOpenVersion {
     using LOpenUtilities for string[];
     using LOpenUtilities for address; 
 
-    uint version = 8;
+    uint version = 10;
 
     string name = "RESERVED_OPEN_ROLES_CORE"; 
 
@@ -76,24 +77,37 @@ contract OpenRoles is IOpenRoles, IOpenVersion {
             IOpenRolesDerivativeTypesAdmin iordta = IOpenRolesDerivativeTypesAdmin(admin.getDerivativeContractTypesAdmin(dApp_));
             IOpenRolesDerivativesAdmin iorda = IOpenRolesDerivativesAdmin(admin.getDerivativeContractsAdmin(dApp_));
 
-            address[] memory userAddresses_ = iorda.getUserAddressesForRoleForContract(_contract, _role);        
-        
-            if(_srcSender.isContained(userAddresses_)){
-                string [] memory functions_ = iorda.getFunctionsForRoleforContract(_contract,_role);
-                if(_function.isContained(functions_)){
-                    return true; 
-                }
-            }
-            
-            string memory derivativeContractType_ = iorda.getDerivativeContractType(_contract); 
+            string [] memory localRoles_ = iorda.getRolesForContract(_contract);
+            if(_role.isContained(localRoles_)){
 
-            userAddresses_ = iordta.listUsersForRoleForDerivativeContractType(derivativeContractType_, _role);
-            if(_srcSender.isContained(userAddresses_)){
-                string [] memory functions_ = iordta.listFunctionsForRoleForDerivativeContractType(derivativeContractType_,_role);
-                if(_function.isContained(functions_)){
-                    return true; 
+                address[] memory localUserAddresses_ = iorda.getUserAddressesForRoleForContract(_contract, _role);        
+            
+                if(_srcSender.isContained(localUserAddresses_)){
+                    string [] memory functions_ = iorda.getFunctionsForRoleforContract(_contract,_role);
+                    if(_function.isContained(functions_)){
+                        return true; 
+                    }
+                    return false; 
                 }
+                return false; 
             }
+            else { 
+                string memory derivativeContractType_ = iorda.getDerivativeContractType(_contract); 
+                string [] memory dappRoles_ = admin.listRolesForDapp(dApp_);
+                if(_role.isContained(dappRoles_)){
+                    address [] memory dappUserAddresses_ = iordta.listUsersForRoleForDerivativeContractType(derivativeContractType_, _role);
+                    if(_srcSender.isContained(dappUserAddresses_)){
+                        string [] memory functions_ = iordta.listFunctionsForRoleForDerivativeContractType(derivativeContractType_,_role);
+                        if(_function.isContained(functions_)){
+                            return true; 
+                        }
+                        return false;
+                    }
+                    return false;                    
+                }
+                return false; 
+            }
+           
         }
         else{
             if(barring) {
