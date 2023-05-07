@@ -1,20 +1,20 @@
 //SPDX-License-Identifier: Apache-2.0
 
-pragma solidity ^0.8.15;
+pragma solidity >=0.8.0 <0.9.0;
 
 import "https://github.com/Block-Star-Logic/open-version/blob/e161e8a2133fbeae14c45f1c3985c0a60f9a0e54/blockchain_ethereum/solidity/V1/interfaces/IOpenVersion.sol";
 
 import "https://github.com/Block-Star-Logic/open-libraries/blob/703b21257790c56a61cd0f3d9de3187a9012e2b3/blockchain_ethereum/solidity/V1/libraries/LOpenUtilities.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesAdmin.sol";
+import "../interfaces/IOpenRolesAdmin.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesAdminInternal.sol";
+import "../interfaces/IOpenRolesAdminInternal.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/da64281ff9a0be20c800f1c3e61a17bce99fc90d/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesDerivativeAdmin.sol";
+import "../interfaces/IOpenRolesDerivativesAdmin.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/48e921db2f31fe4c9afe954399a45d78237e1e70/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesDerivativeTypesAdmin.sol";
+import "../interfaces/IOpenRolesDerivativeTypesAdmin.sol";
 
-import "https://github.com/Block-Star-Logic/open-roles/blob/main/blockchain_ethereum/solidity/v2/contracts/interfaces/IOpenRolesManaged.sol";
+import "../interfaces/IOpenRolesManaged.sol";
 
 
  
@@ -24,10 +24,11 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInterna
     using LOpenUtilities for string[];
     using LOpenUtilities for address; 
 
-    string name = "RESERVED_OPEN_ROLES_ADMIN"; 
-    uint256 version = 11;  
+    string constant name = "RESERVED_OPEN_ROLES_ADMIN"; 
+    uint256 constant version = 14;  
 
-    address rootAdmin; 
+    address [] adminList; 
+    mapping(address=>bool) isAdmin; 
     address self;
 
     string [] dappList; 
@@ -69,15 +70,16 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInterna
     mapping(string=>mapping(string=>mapping(address=>bool))) isKnownUserByRoleByDapp; 
 
     constructor( address _rootAdmin) {        
-        rootAdmin = _rootAdmin; 
+        isAdmin[_rootAdmin] = true; 
+        adminList.push(_rootAdmin);
         self = address(this);
     }
 
-    function getVersion() override view external returns (uint256 _version){
+    function getVersion() pure external returns (uint256 _version){
         return version; 
     }
 
-    function getName() override view external returns (string memory _contractName){
+    function getName() pure external returns (string memory _contractName){
         return name; 
     }
 
@@ -274,6 +276,22 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInterna
         return removeDerivativeContractManagementForDAppInternal(_dApp); 
     }
    
+    function addAdmin(address _admin) external returns (bool _adminAdded) {
+        doSecurity(msg.sender, "addAdmin");
+        require(!isAdmin[_admin], " already admin ");
+        isAdmin[_admin] = true;
+        adminList.push(_admin);
+        return true; 
+    }
+
+    function removeAdmin(address _admin) external returns (bool _removed) {
+        doSecurity(msg.sender, "removeAdmin");
+        require(adminList.length > 1, " service needs at least 1 admin ");
+        delete isAdmin[_admin];
+        adminList = _admin.remove(adminList);
+        return true; 
+    }
+
     // ================================== INTERNAL FUNCTIONS ===================================================
 
     function addContractsForDappInternal(string memory _dApp, address [] memory _contracts, string [] memory _contractNames) internal returns (bool _added){
@@ -539,7 +557,7 @@ contract OpenRolesAdmin is IOpenVersion, IOpenRolesAdmin, IOpenRolesAdminInterna
     }
 
     function doSecurity(address _user, string memory _function) view internal returns (bool _done) {              
-        require(_user == rootAdmin, string(" Open Roles Admin : ").append(_function).append(string(" 00 : - admin only")));                
+        require(isAdmin[_user], string(" Open Roles Admin : ").append(_function).append(string(" 00 : - admin only")));                
         return true; 
     }
 
